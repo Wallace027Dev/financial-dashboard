@@ -1,8 +1,8 @@
 import jsonwebtoken from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { z } from "zod";
 
 import IUser from "@/interfaces/IUser";
+import userZod from "@/utils/userZod";
 
 const users: any = [];
 
@@ -21,33 +21,10 @@ class AuthService {
   }
 
   async validateData(data: Partial<IUser>) {
-    const user = z.object({
-      name: z
-        .string({
-          required_error: "is required",
-          invalid_type_error: "must be a string"
-        })
-        .min(3, {
-          message: "must be a 3 or more characters long"
-        }),
-      email: z
-        .string({
-          required_error: "is required",
-          invalid_type_error: "must be a string"
-        })
-        .email(),
-      password: z
-        .string({
-          required_error: "is required",
-          invalid_type_error: "must be a string"
-        })
-        .min(6, {
-          message: "must be a 6 or more characters long"
-        })
-    });
+    // Valida o dado usando ZOD
+    const result = userZod.safeParse(data);
 
-    const result = user.safeParse(data);
-
+    // Retorna o erro, caso não seja válido
     if (!result.success) {
       const errorMessage = result.error.errors
         .map((err) => `${err.path.join(".")}: ${err.message}`)
@@ -59,10 +36,12 @@ class AuthService {
   }
 
   async findByEmail(email: string) {
+    // Pega o usuário pelo ID
     return users.find((user: IUser) => user.email == email);
   }
 
   async login(data: Partial<IUser>, user: IUser) {
+    // Verifica se o dado é válido
     const validatedUser = await this.validateData(data);
 
     // Verificando se senhas conferem
@@ -78,11 +57,11 @@ class AuthService {
   }
 
   async register(data: Partial<IUser>) {
-    const salt = await bcrypt.genSalt(10);
-
+    // Verifica se o dado é válido
     const validatedUser = await this.validateData(data);
 
     // Criando hash de senha
+    const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(validatedUser.password, salt);
 
     // Criando objeto do novo usuário
@@ -96,7 +75,6 @@ class AuthService {
 
     // Adicionando novo usuário na tabela
     users.push(newUser);
-
     // Log da lista de usuários
     console.log(users);
 
@@ -107,6 +85,7 @@ class AuthService {
   }
 
   async generateToken(email: string) {
+    // Verifica se existe uma chave privada
     const privateKey = process.env.PRIVATE_KEY;
     if (!privateKey) throw new Error("Private key is not defined!");
 
