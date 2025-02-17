@@ -8,45 +8,41 @@ const users: any = [];
 
 class AuthService {
   async authenticate(data: Partial<IUser>) {
-    try {
-      // Verifica se email já existe na tabela
-      const userExists = await this.findByEmail(data.email!);
+    // Verifica se email já existe na tabela
+    const userExists = await this.findByEmail(data.email!);
 
-      // Se usuário já existir, retorna o usuário caso autenticado
-      if (userExists) {
-        return await this.login(data, userExists);
-      }
-
-      // Registra o usuário, caso não exista
-      return this.register(data);
-    } catch (error: any) {
-      return error.message;
+    // Se usuário já existir, retorna o usuário caso autenticado
+    if (userExists) {
+      return await this.login(data, userExists);
     }
+
+    // Registra o usuário, caso não exista
+    return this.register(data);
   }
 
   async validateData(data: Partial<IUser>) {
     const user = z.object({
       name: z
         .string({
-          required_error: "Name is required",
-          invalid_type_error: "Name must be a string"
+          required_error: "is required",
+          invalid_type_error: "must be a string"
         })
         .min(3, {
-          message: "Must be a 3 or more characters long"
+          message: "must be a 3 or more characters long"
         }),
       email: z
         .string({
-          required_error: "Email is required",
-          invalid_type_error: "Email must be a string"
+          required_error: "is required",
+          invalid_type_error: "must be a string"
         })
         .email(),
       password: z
         .string({
-          required_error: "Password is required",
-          invalid_type_error: "Password must be a string"
+          required_error: "is required",
+          invalid_type_error: "must be a string"
         })
         .min(6, {
-          message: "Must be a 6 or more characters long"
+          message: "must be a 6 or more characters long"
         })
     });
 
@@ -67,73 +63,56 @@ class AuthService {
   }
 
   async login(data: Partial<IUser>, user: IUser) {
-    try {
-      const privateKey = process.env.PRIVATE_KEY;
-      if (!privateKey) {
-        throw new Error("Chave privada não encontrada!");
-      }
+    const validatedUser = await this.validateData(data);
 
-      if (!data.password) {
-        throw new Error("Senha não informada");
-      }
-
-      // Verificando se senhas conferem
-      const isMatch = await bcrypt.compare(data.password, user.password);
-      if (!isMatch) {
-        throw new Error("Senha não confere!");
-      }
-
-      // Criando token, caso autenticado
-      const token = jsonwebtoken.sign({ email: data.email }, privateKey, {
-        expiresIn: "60m"
-      });
-
-      return { data: { user, token } };
-    } catch (error: any) {
-      throw new Error(
-        error.message || { message: "Algo de errado aconteceu o logar-se." }
-      );
+    // Verificando se senhas conferem
+    const isMatch = await bcrypt.compare(validatedUser.password, user.password);
+    if (!isMatch) {
+      throw new Error("Incorrect password.");
     }
+
+    // Criando token, caso autenticado
+    const token = this.generateToken(validatedUser.email);
+
+    return { data: { user, token } };
   }
 
   async register(data: Partial<IUser>) {
-    try {
-      const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(10);
 
-      const validatedUser = await this.validateData(data);
+    const validatedUser = await this.validateData(data);
 
-      // Criando hash de senha
-      const hashedPassword = await bcrypt.hash(validatedUser.password, salt);
+    // Criando hash de senha
+    const hashedPassword = await bcrypt.hash(validatedUser.password, salt);
 
-      // Criando objeto do novo usuário
-      const newUser = {
-        id: Math.round(1000 * Math.random()),
-        name: validatedUser.name,
-        email: validatedUser.email,
-        password: hashedPassword,
-        createdAt: new Date(Date.now())
-      };
+    // Criando objeto do novo usuário
+    const newUser = {
+      id: Math.round(1000 * Math.random()),
+      name: validatedUser.name,
+      email: validatedUser.email,
+      password: hashedPassword,
+      createdAt: new Date(Date.now())
+    };
 
-      // Adicionando novo usuário na tabela
-      users.push(newUser);
+    // Adicionando novo usuário na tabela
+    users.push(newUser);
 
-      // Log da lista de usuários
-      console.log(users);
+    // Log da lista de usuários
+    console.log(users);
 
-      // Gerando token
-      const privateKey = process.env.PRIVATE_KEY;
-      if (!privateKey) throw new Error("Chave privada não encontrada!");
+    // Gerando token
+    const token = this.generateToken(newUser.email);
 
-      const token = jsonwebtoken.sign({ email: newUser.email }, privateKey, {
-        expiresIn: "60m"
-      });
+    return { user: newUser, token };
+  }
 
-      return { user: newUser, token };
-    } catch (error: any) {
-      throw new Error(
-        error.message || { message: "Algo de errado aconteceu o registrar-se." }
-      );
-    }
+  async generateToken(email: string) {
+    const privateKey = process.env.PRIVATE_KEY;
+    if (!privateKey) throw new Error("Private key is not defined!");
+
+    return jsonwebtoken.sign({ email: email }, privateKey, {
+      expiresIn: "60m"
+    });
   }
 }
 

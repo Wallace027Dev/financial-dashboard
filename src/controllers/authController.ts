@@ -3,10 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 class AuthController {
   async authUser(req: NextRequest) {
-    const data = await req.json();
-    const response = await authService.authenticate(data);
-
-    return NextResponse.json(response);
+    try {
+      const data = await req.json();
+      const response = await authService.authenticate(data);
+      return NextResponse.json(response, { status: 200 });
+    } catch (error: any) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
   }
 }
 
