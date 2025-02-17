@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 class AuthController {
   async authUser(req: NextRequest) {
     const data = await req.json();
-    const response = await authService(data);
+    const response = await authService.authenticate(data);
 
     return NextResponse.json(response);
   }
