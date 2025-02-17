@@ -51,7 +51,7 @@ class AuthService {
     }
 
     // Criando token, caso autenticado
-    const token = this.generateToken(validatedUser.email);
+    const token = await this.generateToken(validatedUser.email);
 
     return { data: { user, token } };
   }
@@ -79,7 +79,7 @@ class AuthService {
     console.log(users);
 
     // Gerando token
-    const token = this.generateToken(newUser.email);
+    const token = await this.generateToken(newUser.email);
 
     return { user: newUser, token };
   }
