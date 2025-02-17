@@ -1,40 +1,43 @@
 import ITransaction from "@/interfaces/ITransaction";
 import authService from "./authService";
+import transactionZod from "@/utils/transactionZod";
 
 const transactions: any = [];
 
 class TransactionService {
+  async validateData(data: Partial<ITransaction>) {
+    // Valida o dado usando ZOD
+    const result = transactionZod.safeParse(data);
+
+    // Retorna o erro, caso não seja válido
+    if (!result.success) {
+      const errorMessage = result.error.errors
+        .map((err) => `${err.path.join(".")}: ${err.message}`)
+        .join(", ");
+
+      throw new Error(errorMessage);
+    }
+
+    result.data;
+  }
+
   async create(data: ITransaction) {
-    const userExists = await authService.findById(data.userId);
-    if (!userExists) {
-      throw new Error("User not found");
-    }
+    // Verifica se o dado é válido
+    await this.validateData(data);
 
-    if (!data.type) {
-      throw new Error("Type not found");
-    }
-
-    if ((data.type !== "EXPENSE") && (data.type !== "RECIPE")) {
-      throw new Error("Type is not valid");
-    }
-
-    if (!data.value) {
-      throw new Error("Value not found");
-    }
-
-    if (!data.category) {
-      throw new Error("Category not found");
-    }
-
+    // Criando objeto de nova transação de um usuário
     const transaction = {
       type: data.type,
       value: data.value,
       category: data.category,
       userId: data.userId
     };
-    transactions.push(transaction);
 
+    // Adicionando nova transação na tabela
+    transactions.push(transaction);
+    // Log da lista de transações
     console.log(transactions);
+
     return transaction;
   }
 }
