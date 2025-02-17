@@ -17,7 +17,7 @@ class AuthService {
     }
 
     // Registra o usuário, caso não exista
-    return this.register(data);
+    return await this.register(data);
   }
 
   async validateData(data: Partial<IUser>) {
@@ -35,9 +35,14 @@ class AuthService {
     return result.data;
   }
 
-  async findByEmail(email: string) {
+  async findById(id: number) {
     // Pega o usuário pelo ID
-    return users.find((user: IUser) => user.email == email);
+    return await users.find((user: IUser) => user.id == id);
+  }
+
+  async findByEmail(email: string) {
+    // Pega o usuário pelo email
+    return await users.find((user: IUser) => user.email == email);
   }
 
   async login(data: Partial<IUser>, user: IUser) {
