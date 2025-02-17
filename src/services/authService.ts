@@ -4,7 +4,13 @@ import bcrypt from "bcryptjs";
 import IUser from "@/interfaces/IUser";
 import userZod from "@/utils/userZod";
 
-const users: any = [];
+const users: any = [{
+  id: 202,
+  name: 'Wallace Vieira',
+  email: 'wallace123@email.com',
+  password: '$2b$10$PLLl.8./2Pxu2/IbhucyeutaOXc4PYEL88BhpIL1mJWTqZ64w1Qzu',
+  createdAt: "2025-02-17"
+}];
 
 class AuthService {
   async authenticate(data: Partial<IUser>) {
@@ -36,13 +42,14 @@ class AuthService {
   }
 
   async findById(id: number) {
+    console.log("Buscando usuário pelo ID: ", users);
     // Pega o usuário pelo ID
-    return await users.find((user: IUser) => user.id == id);
+    return users.find((user: IUser) => user.id === Number(id));
   }
 
   async findByEmail(email: string) {
     // Pega o usuário pelo email
-    return await users.find((user: IUser) => user.email == email);
+    return users.find((user: IUser) => user.email === email);
   }
 
   async login(data: Partial<IUser>, user: IUser) {
@@ -75,7 +82,7 @@ class AuthService {
       name: validatedUser.name,
       email: validatedUser.email,
       password: hashedPassword,
-      createdAt: new Date(Date.now())
+      createdAt: new Date().toISOString().split("T")[0]
     };
 
     // Adicionando novo usuário na tabela

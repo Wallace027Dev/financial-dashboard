@@ -1,14 +1,14 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import transactionService from "@/services/transactionService";
 
 class TransactionController {
   async create(data: NextRequest) {
     try {
       const transaction = await data.json();
-
-      return transactionService.create(transaction);
+      const response = await transactionService.create(transaction);
+      return NextResponse.json(response, { status: 200 });
     } catch (error: any) {
-      return error.message;
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
   }
 }
