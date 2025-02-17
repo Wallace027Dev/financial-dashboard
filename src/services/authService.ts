@@ -7,6 +7,23 @@ import IUser from "@/interfaces/IUser";
 const users: any = [];
 
 class AuthService {
+  async authenticate(data: Partial<IUser>) {
+    try {
+      // Verifica se email já existe na tabela
+      const userExists = await this.findByEmail(data.email!);
+
+      // Se usuário já existir, retorna o usuário caso autenticado
+      if (userExists) {
+        return await this.login(data, userExists);
+      }
+
+      // Registra o usuário, caso não exista
+      return this.register(data);
+    } catch (error: any) {
+      return error.message;
+    }
+  }
+
   async validateData(data: Partial<IUser>) {
     const user = z.object({
       name: z
@@ -45,40 +62,43 @@ class AuthService {
     return result.data;
   }
 
-  async authenticate(data: Partial<IUser>) {
-    const salt = await bcrypt.genSalt(10); // Salt de 10 rounds, ajustável
+  async findByEmail(email: string) {
+    return users.find((user: IUser) => user.email == email);
+  }
 
+  async login(data: Partial<IUser>, user: IUser) {
     try {
-      // Verifica se email já existe na tabela
-      const userExists = users.find((user: IUser) => user.email == data.email);
-
-      // Se usuário já existir, retorna o usuário caso autenticado
-      if (userExists) {
-        const privateKey = process.env.PRIVATE_KEY;
-        if (!privateKey) {
-          throw new Error("Chave privada não encontrada!");
-        }
-
-        if (!data.password) {
-          throw new Error("Senha não informada");
-        }
-
-        // Verificando se senhas conferem
-        const isMatch = await bcrypt.compare(
-          data.password,
-          userExists.password
-        );
-        if (!isMatch) {
-          throw new Error("Senha não confere!");
-        }
-
-        // Criando token, caso autenticado
-        const token = jsonwebtoken.sign({ email: data.email }, privateKey, {
-          expiresIn: "60m"
-        });
-
-        return { data: { userExists, token } };
+      const privateKey = process.env.PRIVATE_KEY;
+      if (!privateKey) {
+        throw new Error("Chave privada não encontrada!");
       }
+
+      if (!data.password) {
+        throw new Error("Senha não informada");
+      }
+
+      // Verificando se senhas conferem
+      const isMatch = await bcrypt.compare(data.password, user.password);
+      if (!isMatch) {
+        throw new Error("Senha não confere!");
+      }
+
+      // Criando token, caso autenticado
+      const token = jsonwebtoken.sign({ email: data.email }, privateKey, {
+        expiresIn: "60m"
+      });
+
+      return { data: { user, token } };
+    } catch (error: any) {
+      throw new Error(
+        error.message || { message: "Algo de errado aconteceu o logar-se." }
+      );
+    }
+  }
+
+  async register(data: Partial<IUser>) {
+    try {
+      const salt = await bcrypt.genSalt(10);
 
       const validatedUser = await this.validateData(data);
 
@@ -100,9 +120,19 @@ class AuthService {
       // Log da lista de usuários
       console.log(users);
 
-      return newUser;
+      // Gerando token
+      const privateKey = process.env.PRIVATE_KEY;
+      if (!privateKey) throw new Error("Chave privada não encontrada!");
+
+      const token = jsonwebtoken.sign({ email: newUser.email }, privateKey, {
+        expiresIn: "60m"
+      });
+
+      return { user: newUser, token };
     } catch (error: any) {
-      return error.message;
+      throw new Error(
+        error.message || { message: "Algo de errado aconteceu o registrar-se." }
+      );
     }
   }
 }
