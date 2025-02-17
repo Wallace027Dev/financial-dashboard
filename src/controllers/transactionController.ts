@@ -11,6 +11,17 @@ class TransactionController {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
   }
+
+  async update(data: NextRequest) {
+    try {
+      const newData = await data.json();
+
+      const updatedTransaction = await transactionService.update(newData);
+      return NextResponse.json(updatedTransaction, { status: 200 });
+    } catch (error: any) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+  }
 }
 
 const transactionController = new TransactionController();

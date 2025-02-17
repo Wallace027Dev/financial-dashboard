@@ -3,19 +3,17 @@ import bcrypt from "bcryptjs";
 
 import IUser from "@/interfaces/IUser";
 import userZod from "@/utils/userZod";
-
-const users: any = [{
-  id: 202,
-  name: 'Wallace Vieira',
-  email: 'wallace123@email.com',
-  password: '$2b$10$PLLl.8./2Pxu2/IbhucyeutaOXc4PYEL88BhpIL1mJWTqZ64w1Qzu',
-  createdAt: "2025-02-17"
-}];
+import userService from "./userService";
+import users from "@/mocks/users";
 
 class AuthService {
   async authenticate(data: Partial<IUser>) {
+    if (!data.email) {
+      throw new Error("Email is required");
+    }
+
     // Verifica se email já existe na tabela
-    const userExists = await this.findByEmail(data.email!);
+    const userExists = await userService.findByEmail(data.email);
 
     // Se usuário já existir, retorna o usuário caso autenticado
     if (userExists) {
@@ -39,17 +37,6 @@ class AuthService {
     }
 
     return result.data;
-  }
-
-  async findById(id: number) {
-    console.log("Buscando usuário pelo ID: ", users);
-    // Pega o usuário pelo ID
-    return users.find((user: IUser) => user.id === Number(id));
-  }
-
-  async findByEmail(email: string) {
-    // Pega o usuário pelo email
-    return users.find((user: IUser) => user.email === email);
   }
 
   async login(data: Partial<IUser>, user: IUser) {
