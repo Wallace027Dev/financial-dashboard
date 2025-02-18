@@ -4,6 +4,8 @@ interface ITransactionFilters {
   userId?: number;
   minValue?: number;
   maxValue?: number;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 export default ITransactionFilters;

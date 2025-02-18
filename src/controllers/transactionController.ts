@@ -33,6 +33,14 @@ class TransactionController {
         filters.maxValue = parseFloat(params.get("maxValue")!);
       }
 
+      if (params.has("minDate")) {
+        filters.minDate = new Date(params.get("minDate")!);
+      }
+  
+      if (params.has("maxDate")) {
+        filters.maxDate = new Date(params.get("maxDate")!);
+      }
+
       // Passando os filtros para o serviço
       const response = await transactionService.listAll(filters);
 

@@ -60,6 +60,19 @@ class TransactionService {
       );
     }
 
+    // Filtro por data (minDate e maxDate)
+    if (filters.minDate) {
+      filteredTransactions = filteredTransactions.filter(
+        (transaction: ITransaction) => new Date(transaction.createdAt) >= filters.minDate!
+      );
+    }
+
+    if (filters.maxDate) {
+      filteredTransactions = filteredTransactions.filter(
+        (transaction: ITransaction) => new Date(transaction.createdAt) <= filters.maxDate!
+      );
+    }
+
     // Retorna as transações filtradas ou todas as transações se nenhum filtro foi aplicado
     return filteredTransactions;
   }
