@@ -8,6 +8,14 @@ const transactions: any = [
     createdAt: "2025-02-18"
   },
   {
+    id: 982,
+    type: "EXPENSE",
+    value: 108,
+    category: "Restaurante",
+    userId: 202,
+    createdAt: "2025-02-09"
+  },
+  {
     id: 811,
     type: "EXPENSE",
     value: 1232.32,

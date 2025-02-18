@@ -13,51 +13,68 @@ import {
 } from "recharts";
 import ITransaction from "@/interfaces/ITransaction";
 
+const periods = [
+  { label: "Últimos 7 dias", value: 7 },
+  { label: "Últimos 30 dias", value: 30 },
+  { label: "Últimos 3 meses", value: 90 }
+];
+
 export default function FinancialEvolutionChart() {
-  const [data, setData] = useState<ITransaction[]>([]);
   const [chartData, setChartData] = useState<any[]>([]);
+  const [selectedPeriod, setSelectedPeriod] = useState(30);
+  const [userId, setUserId] = useState(202);
 
   useEffect(() => {
     const fetchTransactions = async () => {
+      const today = new Date();
+      const minDate = new Date();
+      minDate.setDate(today.getDate() - selectedPeriod);
+
+      const formattedMaxDate = today.toISOString().split("T")[0];
+      const formattedMinDate = minDate.toISOString().split("T")[0];
+
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/transactions`
+          `http://localhost:3000/api/transactions?userId=${userId}&minDate=${formattedMinDate}&maxDate=${formattedMaxDate}`
         );
-        setData(response.data);
+
+        let saldo = 0;
+        const formattedData = response.data.map((transaction: ITransaction) => {
+          saldo +=
+            transaction.type === "RECIPE"
+              ? transaction.value
+              : -transaction.value;
+          return {
+            date: new Date(transaction.createdAt).toLocaleDateString("pt-BR"),
+            saldo
+          };
+        });
+
+        setChartData(formattedData);
       } catch (error) {
         console.error("Erro ao buscar transações:", error);
       }
     };
 
     fetchTransactions();
-  }, []);
-
-  useEffect(() => {
-    if (data.length > 0) {
-      const sortedData = [...data].sort(
-        (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      );
-
-      let saldo = 0;
-      const formattedData = sortedData.map((transaction) => {
-        saldo +=
-          transaction.type === "RECIPE"
-            ? transaction.value
-            : -transaction.value;
-        return {
-          date: new Date(transaction.createdAt).toLocaleDateString("pt-BR"),
-          saldo
-        };
-      });
-
-      setChartData(formattedData);
-    }
-  }, [data]);
+  }, [selectedPeriod]);
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
+    <div>
       <h2 className="text-lg font-semibold mb-4">Evolução Financeira</h2>
+
+      <select
+        className="mb-4 p-2 border rounded-md"
+        value={selectedPeriod}
+        onChange={(e) => setSelectedPeriod(Number(e.target.value))}
+      >
+        {periods.map((period) => (
+          <option key={period.value} value={period.value}>
+            {period.label}
+          </option>
+        ))}
+      </select>
+
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
           data={chartData}
