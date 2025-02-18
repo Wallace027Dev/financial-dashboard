@@ -69,6 +69,7 @@ class AuthService {
       name: validatedUser.name,
       email: validatedUser.email,
       password: hashedPassword,
+      balance: 0.00,
       createdAt: new Date().toISOString().split("T")[0]
     };
 

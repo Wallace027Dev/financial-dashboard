@@ -22,7 +22,13 @@ const userZod = z.object({
     })
     .min(6, {
       message: "must be a 6 or more characters long"
+    }),
+  balance: z
+    .number({
+      required_error: "is required",
+      invalid_type_error: "must be a number"
     })
+    .int("must be a integer")
 });
 
 export default userZod;

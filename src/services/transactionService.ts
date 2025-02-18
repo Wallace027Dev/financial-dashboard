@@ -3,6 +3,8 @@ import transactionZod from "@/utils/transactionZod";
 import userService from "./userService";
 import transactions from "@/mocks/transaction";
 import ITransactionFilters from "@/interfaces/ITransactionFilters";
+import users from "@/mocks/users";
+import IUser from "@/interfaces/IUser";
 
 class TransactionService {
   async validateData(data: Partial<ITransaction>) {
@@ -101,10 +103,30 @@ class TransactionService {
     // Verifica se o dado é válido
     await this.validateData(data);
     // Verifica se usuário existe
-    const userExists = await userService.findById(data.userId);
-    if (!userExists) {
+    const user = await userService.findById(data.userId);
+    if (!user) {
       throw new Error("User not found");
     }
+
+    // Atualizando saldo do usuário
+    if (data.type === "EXPENSE") {
+      user.balance -= data.value;
+    }
+    if (data.type === "RECIPE") {
+      user.balance += data.value;
+    }
+
+    const updatedUser = {
+      ...data,
+      updatedAt: new Date().toISOString().split("T")[0]
+    };
+
+    // Salva as mudanças (no seu caso, atualiza na "tabela" ou array de usuários)
+    const index = users.findIndex((user: IUser) => user.id === data.id);
+    if (index !== -1) {
+      users[index] = updatedUser;
+    }
+    console.log(users);
 
     // Criando objeto de nova transação de um usuário
     const transaction = {
