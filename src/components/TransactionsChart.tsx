@@ -58,7 +58,7 @@ export default function TransactionsChart() {
 
   return (
     <div className="max-w-7xl">
-      <h2 className="text-lg font-semibold mb-4 text-slate-800">
+      <h2 className="text-lg font-semibold mb-4 text-slate-950">
         Receitas e Despesas por Categoria
       </h2>
       <ResponsiveContainer width="100%" height={400}>
