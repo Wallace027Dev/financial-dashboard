@@ -2,8 +2,8 @@ const transactions: any = [
   {
     id: 982,
     type: "EXPENSE",
-    value: 12.32,
-    category: "Compras",
+    value: 12,
+    category: "Restaurante",
     userId: 202,
     createdAt: "2025-02-18"
   },
@@ -11,7 +11,7 @@ const transactions: any = [
     id: 811,
     type: "EXPENSE",
     value: 1232.32,
-    category: "Compras",
+    category: "Mercado",
     userId: 202,
     createdAt: "2025-02-17"
   },
@@ -19,7 +19,7 @@ const transactions: any = [
     id: 818,
     type: "EXPENSE",
     value: 123,
-    category: "Compras",
+    category: "Lazer",
     userId: 202,
     createdAt: "2025-02-17"
   },
@@ -27,7 +27,7 @@ const transactions: any = [
     id: 125,
     type: "RECIPE",
     value: 2500,
-    category: "Compras",
+    category: "Salário mensal",
     userId: 202,
     createdAt: "2025-02-16"
   },
@@ -35,7 +35,7 @@ const transactions: any = [
     id: 556,
     type: "RECIPE",
     value: 1200,
-    category: "Compras",
+    category: "Freelance",
     userId: 202,
     createdAt: "2025-02-16",
     deletedAt: "2025-02-16"
