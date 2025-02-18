@@ -1,8 +1,8 @@
 import ITransaction from "@/interfaces/ITransaction";
 import transactionZod from "@/utils/transactionZod";
 import userService from "./userService";
-
-const transactions: any = [];
+import transactions from "@/mocks/transaction";
+import ITransactionFilters from "@/interfaces/ITransactionFilters";
 
 class TransactionService {
   async validateData(data: Partial<ITransaction>) {
@@ -19,6 +19,47 @@ class TransactionService {
     }
 
     result.data;
+  }
+
+  async listAll(filters: ITransactionFilters) {
+    let filteredTransactions = transactions;
+
+    // Filtro por categoria
+    if (filters.category) {
+      filteredTransactions = filteredTransactions.filter(
+        (transaction: ITransaction) => transaction.category === filters.category
+      );
+    }
+
+    // Filtro por tipo (RECIPE ou EXPENSE)
+    if (filters.type) {
+      filteredTransactions = filteredTransactions.filter(
+        (transaction: ITransaction) => transaction.type === filters.type
+      );
+    }
+
+    // Filtro por userId
+    if (filters.userId) {
+      filteredTransactions = filteredTransactions.filter(
+        (transaction: ITransaction) => transaction.userId === filters.userId
+      );
+    }
+
+    // Filtro por valor (minValue e maxValue)
+    if (filters.minValue) {
+      filteredTransactions = filteredTransactions.filter(
+        (transaction: ITransaction) => transaction.value >= filters.minValue!
+      );
+    }
+
+    if (filters.maxValue) {
+      filteredTransactions = filteredTransactions.filter(
+        (transaction: ITransaction) => transaction.value <= filters.maxValue!
+      );
+    }
+
+    // Retorna as transações filtradas ou todas as transações se nenhum filtro foi aplicado
+    return filteredTransactions;
   }
 
   async findById(id: number) {
