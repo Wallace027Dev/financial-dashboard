@@ -123,7 +123,6 @@ class TransactionService {
     if (index !== -1) {
       users[index] = updatedUser;
     }
-    console.log(users);
 
     // Criando objeto de nova transação de um usuário
     const transaction = {
@@ -146,6 +145,11 @@ class TransactionService {
   async update(data: Partial<ITransaction>) {
     // Atualizando transação na tabela
     const transaction = await this.findById(data.id!);
+
+    if (!transaction) {
+      throw new Error("Transaction not found");
+    }
+
     const updatedTransaction = {
       ...transaction,
       ...data, // Substitui os campos com os novos dados
@@ -165,12 +169,21 @@ class TransactionService {
 
   async delete(id: number) {
     const transaction = await this.findById(id);
+
+    if (!transaction) {
+      throw new Error("Transaction not found");
+    }
+
     const updatedTransaction = {
       ...transaction,
       deletedAt: new Date().toISOString().split("T")[0]
     };
 
     const user = await userService.findById(transaction.userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
     if (transaction.type === "EXPENSE") {
       user.balance += transaction.value;
     }
