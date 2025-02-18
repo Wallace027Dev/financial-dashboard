@@ -1,12 +1,36 @@
 import ITransaction from "@/interfaces/ITransaction";
-import transactionZod from "@/utils/transactionZod";
-import userService from "./userService";
-import transactions from "@/mocks/transaction";
 import ITransactionFilters from "@/interfaces/ITransactionFilters";
-import users from "@/mocks/users";
 import IUser from "@/interfaces/IUser";
+import userService from "./userService";
+import users from "@/mocks/users";
+import transactions from "@/mocks/transaction";
+import transactionZod from "@/utils/transactionZod";
 
 class TransactionService {
+  private async updateUserBalance(
+    userId: number,
+    transactionValue: number,
+    type: "RECIPE" | "EXPENSE"
+  ) {
+    const user = await userService.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (type === "EXPENSE") {
+      user.balance -= transactionValue;
+    } else if (type === "RECIPE") {
+      user.balance += transactionValue;
+    }
+
+    const userIndex = users.findIndex((u: IUser) => u.id === userId);
+    if (userIndex !== -1) {
+      users[userIndex] = user;
+    }
+
+    return user;
+  }
+
   async validateData(data: Partial<ITransaction>) {
     // Valida o dado usando ZOD
     const result = transactionZod.safeParse(data);
@@ -97,34 +121,10 @@ class TransactionService {
   }
 
   async create(data: ITransaction) {
-    // Verifica se o dado é válido
     await this.validateData(data);
-    // Verifica se usuário existe
-    const user = await userService.findById(data.userId);
-    if (!user) {
-      throw new Error("User not found");
-    }
 
-    // Atualizando saldo do usuário
-    if (data.type === "EXPENSE") {
-      user.balance -= data.value;
-    }
-    if (data.type === "RECIPE") {
-      user.balance += data.value;
-    }
+    await this.updateUserBalance(data.userId, data.value, data.type);
 
-    const updatedUser = {
-      ...data,
-      updatedAt: new Date().toISOString().split("T")[0]
-    };
-
-    // Salva as mudanças (no seu caso, atualiza na "tabela" ou array de usuários)
-    const index = users.findIndex((user: IUser) => user.id === data.id);
-    if (index !== -1) {
-      users[index] = updatedUser;
-    }
-
-    // Criando objeto de nova transação de um usuário
     const transaction = {
       id: Math.round(1000 * Math.random()),
       type: data.type,
@@ -134,28 +134,19 @@ class TransactionService {
       createdAt: new Date().toISOString().split("T")[0]
     };
 
-    // Adicionando nova transação na tabela
     transactions.push(transaction);
-    // Log da lista de transações
-    console.log(transactions);
-
     return transaction;
   }
 
   async update(data: Partial<ITransaction>) {
-    // Atualizando transação na tabela
     const transaction = await this.findById(data.id!);
-
-    if (!transaction) {
-      throw new Error("Transaction not found");
-    }
 
     const updatedTransaction = {
       ...transaction,
-      ...data, // Substitui os campos com os novos dados
+      ...data,
       updatedAt: new Date().toISOString().split("T")[0]
     };
-    // Salva as mudanças (no seu caso, atualiza na "tabela" ou array de transações)
+
     const index = transactions.findIndex(
       (transaction: ITransaction) => transaction.id === data.id
     );
@@ -163,42 +154,23 @@ class TransactionService {
       transactions[index] = updatedTransaction;
     }
 
-    // Retorna a transação atualizada
     return updatedTransaction;
   }
 
   async delete(id: number) {
     const transaction = await this.findById(id);
 
-    if (!transaction) {
-      throw new Error("Transaction not found");
-    }
-
     const updatedTransaction = {
       ...transaction,
       deletedAt: new Date().toISOString().split("T")[0]
     };
 
-    const user = await userService.findById(transaction.userId);
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    if (transaction.type === "EXPENSE") {
-      user.balance += transaction.value;
-    }
-    if (transaction.type === "RECIPE") {
-      user.balance -= transaction.value;
-    }
-    // Salva as mudanças (no seu caso, atualiza na "tabela" ou array de usuários)
-    const userIndex = users.findIndex(
-      (transaction: ITransaction) => transaction.id === id
+    await this.updateUserBalance(
+      transaction.userId,
+      transaction.value,
+      transaction.type
     );
-    if (userIndex !== -1) {
-      users[userIndex] = {...user};
-    }
 
-    // Salva as mudanças (no seu caso, atualiza na "tabela" ou array de transações)
     const transactionIndex = transactions.findIndex(
       (transaction: ITransaction) => transaction.id === id
     );
@@ -206,7 +178,7 @@ class TransactionService {
       transactions[transactionIndex] = updatedTransaction;
     }
 
-    return user;
+    return updatedTransaction;
   }
 }
 
