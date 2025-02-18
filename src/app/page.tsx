@@ -1,8 +1,11 @@
 "use client";
-import ITransaction from "@/interfaces/ITransaction";
+
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+
+import ITransaction from "@/interfaces/ITransaction";
+import TransactionsChart from "@/components/TransactionsChart";
 
 export default function Home() {
   const [chartData, setChartData] = useState<any[]>([]);
@@ -27,7 +30,8 @@ export default function Home() {
             } else {
               acc.push({
                 name: transaction.category,
-                value: transaction.value
+                value: transaction.value,
+                type: transaction.type
               });
             }
 
@@ -60,7 +64,7 @@ export default function Home() {
         {chartData.map((entry, index) => (
           <Cell
             key={`cell-${index}`}
-            fill={index % 2 === 0 ? "#0088FE" : "#00C49F"}
+            fill={entry.type === "EXPENSE" ? "#ff6961" : "#82ca9d"}
           />
         ))}
       </Pie>
@@ -73,6 +77,7 @@ export default function Home() {
     <div>
       <h1>Health of Your Finances</h1>
       {renderPieChart}
+      <TransactionsChart />
     </div>
   );
 }
