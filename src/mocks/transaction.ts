@@ -37,7 +37,8 @@ const transactions: any = [
     value: 1200,
     category: "Compras",
     userId: 202,
-    createdAt: "2025-02-16"
+    createdAt: "2025-02-16",
+    deletedAt: "2025-02-16"
   }
 ];
 

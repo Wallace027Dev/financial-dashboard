@@ -28,7 +28,7 @@ class TransactionController {
       if (params.has("minValue")) {
         filters.minValue = parseFloat(params.get("minValue")!);
       }
-  
+
       if (params.has("maxValue")) {
         filters.maxValue = parseFloat(params.get("maxValue")!);
       }
@@ -36,7 +36,7 @@ class TransactionController {
       if (params.has("minDate")) {
         filters.minDate = new Date(params.get("minDate")!);
       }
-  
+
       if (params.has("maxDate")) {
         filters.maxDate = new Date(params.get("maxDate")!);
       }
@@ -67,6 +67,23 @@ class TransactionController {
       const newData = await req.json();
 
       const updatedTransaction = await transactionService.update(newData);
+      return NextResponse.json(updatedTransaction, { status: 200 });
+    } catch (error: any) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+  }
+
+  async delete(req: NextRequest) {
+    try {
+      // Resgatando o ID passado na rota
+      const pathParts = req.nextUrl.pathname.split("/");
+      const id = Number(pathParts[pathParts.length - 1]);
+
+      if (!id) {
+        throw new Error("ID is required")
+      }
+
+      const updatedTransaction = await transactionService.delete(id);
       return NextResponse.json(updatedTransaction, { status: 200 });
     } catch (error: any) {
       return NextResponse.json({ error: error.message }, { status: 400 });

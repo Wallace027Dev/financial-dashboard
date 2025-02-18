@@ -63,15 +63,22 @@ class TransactionService {
     // Filtro por data (minDate e maxDate)
     if (filters.minDate) {
       filteredTransactions = filteredTransactions.filter(
-        (transaction: ITransaction) => new Date(transaction.createdAt) >= filters.minDate!
+        (transaction: ITransaction) =>
+          new Date(transaction.createdAt) >= filters.minDate!
       );
     }
 
     if (filters.maxDate) {
       filteredTransactions = filteredTransactions.filter(
-        (transaction: ITransaction) => new Date(transaction.createdAt) <= filters.maxDate!
+        (transaction: ITransaction) =>
+          new Date(transaction.createdAt) <= filters.maxDate!
       );
     }
+
+    // Trazendo transações que não sofreram Soft Delete
+    filteredTransactions = filteredTransactions.filter(
+      (transaction: ITransaction) => !transaction.deletedAt
+    );
 
     // Retorna as transações filtradas ou todas as transações se nenhum filtro foi aplicado
     return filteredTransactions;
@@ -87,29 +94,6 @@ class TransactionService {
     }
 
     return transaction;
-  }
-
-  async update(data: Partial<ITransaction>) {
-    /* // Verifica se usuário existe
-    await userService.findById(data.userId!); */
-
-    // Atualizando transação na tabela
-    const transaction = await this.findById(data.id!);
-    const updatedTransaction = {
-      ...transaction,
-      ...data, // Substitui os campos com os novos dados
-      updatedAt: new Date().toISOString().split("T")[0]
-    };
-    // Salva as mudanças (no seu caso, atualiza na "tabela" ou array de transações)
-    const index = transactions.findIndex(
-      (transaction: ITransaction) => transaction.id === data.id
-    );
-    if (index !== -1) {
-      transactions[index] = updatedTransaction;
-    }
-
-    // Retorna a transação atualizada
-    return updatedTransaction;
   }
 
   async create(data: ITransaction) {
@@ -157,6 +141,59 @@ class TransactionService {
     console.log(transactions);
 
     return transaction;
+  }
+
+  async update(data: Partial<ITransaction>) {
+    // Atualizando transação na tabela
+    const transaction = await this.findById(data.id!);
+    const updatedTransaction = {
+      ...transaction,
+      ...data, // Substitui os campos com os novos dados
+      updatedAt: new Date().toISOString().split("T")[0]
+    };
+    // Salva as mudanças (no seu caso, atualiza na "tabela" ou array de transações)
+    const index = transactions.findIndex(
+      (transaction: ITransaction) => transaction.id === data.id
+    );
+    if (index !== -1) {
+      transactions[index] = updatedTransaction;
+    }
+
+    // Retorna a transação atualizada
+    return updatedTransaction;
+  }
+
+  async delete(id: number) {
+    const transaction = await this.findById(id);
+    const updatedTransaction = {
+      ...transaction,
+      deletedAt: new Date().toISOString().split("T")[0]
+    };
+
+    const user = await userService.findById(transaction.userId);
+    if (transaction.type === "EXPENSE") {
+      user.balance += transaction.value;
+    }
+    if (transaction.type === "RECIPE") {
+      user.balance -= transaction.value;
+    }
+    // Salva as mudanças (no seu caso, atualiza na "tabela" ou array de usuários)
+    const userIndex = users.findIndex(
+      (transaction: ITransaction) => transaction.id === id
+    );
+    if (userIndex !== -1) {
+      users[userIndex] = {...user};
+    }
+
+    // Salva as mudanças (no seu caso, atualiza na "tabela" ou array de transações)
+    const transactionIndex = transactions.findIndex(
+      (transaction: ITransaction) => transaction.id === id
+    );
+    if (transactionIndex !== -1) {
+      transactions[transactionIndex] = updatedTransaction;
+    }
+
+    return user;
   }
 }
 
