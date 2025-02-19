@@ -11,6 +11,8 @@ import {
 } from "recharts";
 
 import { fetchTransactions } from "@/utils/fetchTransactions";
+import SelectFilter from "@/utils/selectFilter";
+import TransactionsFilters from "./TransactionFilters";
 
 const periods = [
   { label: "Últimos 7 dias", value: 7 },
@@ -43,43 +45,20 @@ export default function TransactionsChart() {
       <h2 className="text-lg font-semibold mb-4 text-slate-950">
         Receitas e Despesas por Categoria
       </h2>
-      <div className="flex gap-4 mb-4">
-        <select
-          className="p-2 border rounded-md"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          <option value="Todos">Todos</option>
-          {allCategories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
 
-        <select
-          className="p-2 border rounded-md"
-          value={selectedType}
-          onChange={(e) => setSelectedType(e.target.value)}
-        >
-          <option value="Todos">Todos</option>
-          <option value="RECIPE">Receitas</option>
-          <option value="EXPENSE">Despesas</option>
-        </select>
+      {/* Filtros */}
+      <TransactionsFilters
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+        selectedPeriod={selectedPeriod}
+        setSelectedPeriod={setSelectedPeriod}
+        allCategories={allCategories}
+        periods={periods}
+      />
 
-        <select
-          className="p-2 border rounded-md"
-          value={selectedPeriod}
-          onChange={(e) => setSelectedPeriod(Number(e.target.value))}
-        >
-          {periods.map((period) => (
-            <option key={period.value} value={period.value}>
-              {period.label}
-            </option>
-          ))}
-        </select>
-      </div>
-
+      {/* Gráfico */}
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
           data={chartData}
