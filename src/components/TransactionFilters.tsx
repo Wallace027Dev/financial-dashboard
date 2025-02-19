@@ -1,4 +1,4 @@
-import SelectFilter from "@/utils/selectFilter";
+import SelectFilter from "@/components/selectFilter";
 
 interface TransactionsFiltersProps {
   selectedCategory: string;
