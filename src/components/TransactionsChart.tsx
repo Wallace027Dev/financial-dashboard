@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import {
   BarChart,
   Bar,
@@ -10,7 +9,8 @@ import {
   CartesianGrid,
   Legend
 } from "recharts";
-import ITransaction from "@/interfaces/ITransaction";
+
+import { fetchTransactions } from "@/utils/fetchTransactions";
 
 const periods = [
   { label: "Últimos 7 dias", value: 7 },
@@ -27,76 +27,15 @@ export default function TransactionsChart() {
   const [allCategories, setAllCategories] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      const today = new Date();
-      const minDate = new Date();
-      minDate.setDate(today.getDate() - selectedPeriod);
-
-      const minDateISO = minDate.toISOString().split("T")[0];
-      const maxDateISO = today.toISOString().split("T")[0];
-
-      const params = new URLSearchParams({
-        userId: userId.toString(),
-        minDate: minDateISO,
-        maxDate: maxDateISO
-      });
-
-      if (selectedCategory !== "Todos")
-        params.append("category", selectedCategory);
-      if (selectedType !== "Todos") params.append("type", selectedType);
-
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/api/transactions?${params.toString()}`
-        );
-
-        const transactions = response.data as ITransaction[];
-
-        if (allCategories.length === 0) {
-          const uniqueCategories = [
-            ...new Set(transactions.map((t) => t.category))
-          ];
-          setAllCategories(uniqueCategories);
-        }
-
-        const groupedData = transactions.reduce(
-          (acc: any[], transaction: ITransaction) => {
-            const existing = acc.find(
-              (item) => item.category === transaction.category
-            );
-
-            if (existing) {
-              if (transaction.type === "RECIPE") {
-                existing.receita += transaction.value;
-              } else if (transaction.type === "EXPENSE") {
-                existing.despesa += transaction.value;
-              }
-            } else {
-              acc.push({
-                category: transaction.category,
-                receita: transaction.type === "RECIPE" ? transaction.value : 0,
-                despesa: transaction.type === "EXPENSE" ? transaction.value : 0
-              });
-            }
-
-            return acc;
-          },
-          []
-        );
-
-        console.log(
-          "transactions: ",
-          transactions,
-          "groupedData: ",
-          groupedData
-        );
-        setChartData(groupedData);
-      } catch (error) {
-        console.error("Erro ao buscar transações:", error);
-      }
-    };
-
-    fetchTransactions();
+    fetchTransactions(
+      userId,
+      selectedPeriod,
+      selectedCategory,
+      selectedType,
+      setChartData,
+      setAllCategories,
+      allCategories
+    );
   }, [selectedCategory, selectedType, selectedPeriod, userId]);
 
   return (
