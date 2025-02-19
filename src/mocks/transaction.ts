@@ -2,15 +2,15 @@ const transactions: any = [
   {
     id: 982,
     type: "EXPENSE",
-    value: 12,
+    value: 122,
     category: "Restaurante",
     userId: 202,
     createdAt: "2025-02-18"
   },
   {
-    id: 982,
+    id: 243,
     type: "EXPENSE",
-    value: 108,
+    value: 180.98,
     category: "Restaurante",
     userId: 202,
     createdAt: "2025-02-09"
