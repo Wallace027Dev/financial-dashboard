@@ -10,6 +10,7 @@ export async function fetchBarTransactions(
   selectedCategory: string,
   selectedType: string,
   setChartData: (data: any) => void,
+  setRawTransactions: (data: ITransaction[]) => void,
   setAllCategories: (categories: string[]) => void,
   allCategories: string[]
 ) {
@@ -35,6 +36,7 @@ export async function fetchBarTransactions(
 
     const groupedData = groupTransactions(transactions);
     setChartData(groupedData);
+    setRawTransactions(transactions);
   } catch (error) {
     console.error("Erro ao buscar transações:", error);
   }
