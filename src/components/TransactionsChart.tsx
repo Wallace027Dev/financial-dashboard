@@ -13,8 +13,8 @@ import {
 import { fetchBarTransactions } from "@/utils/fetchBarTransactions";
 import { periodsForFilter } from "@/utils/periodsForFilter";
 import TransactionsFilters from "./TransactionFilters";
-import { handleExportTransaction } from "@/utils/handleExportTransactions";
 import ITransaction from "@/interfaces/ITransaction";
+import ExportButton from "./exportButton";
 
 export default function TransactionsChart() {
   const [chartData, setChartData] = useState<any[]>([]);
@@ -38,11 +38,6 @@ export default function TransactionsChart() {
     );
   }, [selectedCategory, selectedType, selectedPeriod, userId]);
 
-  const handleClick = () => {
-    handleExportTransaction(rawTransactions);
-    console.log("charDate: \n", rawTransactions);
-  };
-
   return (
     <div className="max-w-7xl">
       <h2 className="text-lg font-semibold mb-4 text-slate-950">
@@ -60,12 +55,7 @@ export default function TransactionsChart() {
           allCategories={allCategories}
           periods={periodsForFilter}
         />
-        <button
-          onClick={handleClick}
-          className="bg-blue-500 px-3 max-h-12 text-white font-bold rounded-md"
-        >
-          Exportar
-        </button>
+        <ExportButton rawTransactions={rawTransactions} />
       </div>
 
       {/* Gráfico */}
