@@ -1,6 +1,7 @@
 import ITransaction from "@/interfaces/ITransaction";
-import { getDateRange } from "./getDateRange";
+import formatDateToBR from "./formatDateToBR";
 import { groupTransactions } from "./groupTransactions";
+import { getDateRange } from "./getDateRange";
 import { getFetch } from "./getFetch";
 import { fetchBarParams } from "./fetchBarParams";
 
@@ -34,7 +35,13 @@ export async function fetchBarTransactions(
       setAllCategories(uniqueCategories);
     }
 
-    const groupedData = groupTransactions(transactions);
+    const formattedTransactions = transactions.map((t) => ({
+      ...t,
+      createdAtFormatted: formatDateToBR(t.createdAt),
+      deletedAtFormatted: t.deletedAt ? formatDateToBR(t.deletedAt) : null
+    }));
+
+    const groupedData = groupTransactions(formattedTransactions);
     setChartData(groupedData);
     setRawTransactions(transactions);
   } catch (error) {

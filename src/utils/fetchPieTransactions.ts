@@ -1,6 +1,8 @@
+import ITransaction from "@/interfaces/ITransaction";
 import { formatTransactions } from "./formatTransactions";
 import { getDateRange } from "./getDateRange";
 import { getFetch } from "./getFetch";
+import formatDateToBR from "./formatDateToBR";
 
 export async function fetchPieTransactions(
   userId: number,
@@ -10,13 +12,19 @@ export async function fetchPieTransactions(
   try {
     const { minDateISO, maxDateISO } = getDateRange(selectedPeriod);
 
-    const transactions = await getFetch("transactions", {
+    const transactions: ITransaction[] = await getFetch("transactions", {
       userId,
       minDate: minDateISO,
       maxDate: maxDateISO
     });
 
-    setChartData(formatTransactions(transactions));
+    const formattedTransactions = transactions.map((t) => ({
+      ...t,
+      createdAtFormatted: formatDateToBR(t.createdAt),
+      deletedAtFormatted: t.deletedAt ? formatDateToBR(t.deletedAt) : null,
+    }));
+
+    setChartData(formatTransactions(formattedTransactions));
   } catch (error) {
     console.error("Erro ao buscar transações:", error);
   }

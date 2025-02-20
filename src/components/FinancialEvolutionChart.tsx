@@ -14,6 +14,7 @@ import {
 import SelectFilter from "./selectFilter";
 import { fetchPieTransactions } from "@/utils/fetchPieTransactions";
 import { periodsForFilter } from "@/utils/periodsForFilter";
+import formatDateToBR from "@/utils/formatDateToBR";
 
 export default function FinancialEvolutionChart() {
   const [chartData, setChartData] = useState<{ date: string; saldo: number }[]>(
@@ -45,7 +46,10 @@ export default function FinancialEvolutionChart() {
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
+          <XAxis
+            dataKey="date"
+            tickFormatter={(date) => formatDateToBR(date)}
+          />
           <YAxis />
           <Tooltip />
           <Line
