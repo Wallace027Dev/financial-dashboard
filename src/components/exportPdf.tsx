@@ -30,6 +30,17 @@ export default function exportPdf(formattedTransactions: ITransaction[]) {
     tableCellHeader: { fontWeight: "bold" }
   });
 
+  // Função para garantir que valores undefined sejam substituídos por "N/A"
+  const getValue = (value: any) =>
+    value === undefined || value === null ? "N/A" : value;
+
+  // Função para converter o tipo de transação
+  const getType = (type: string) => {
+    if (type === "EXPENSE") return "Despesa";
+    if (type === "RECIPE") return "Receita";
+    return "N/A";
+  };
+
   // Criando o documento PDF com a estrutura
   const MyDocument = () => (
     <Document>
@@ -47,9 +58,6 @@ export default function exportPdf(formattedTransactions: ITransaction[]) {
               Categoria
             </Text>
             <Text style={[styles.tableCell, styles.tableCellHeader]}>
-              Usuário
-            </Text>
-            <Text style={[styles.tableCell, styles.tableCellHeader]}>
               Criado em
             </Text>
             <Text style={[styles.tableCell, styles.tableCellHeader]}>
@@ -59,13 +67,12 @@ export default function exportPdf(formattedTransactions: ITransaction[]) {
 
           {formattedTransactions.map((t: ITransaction, index) => (
             <View key={index} style={styles.tableRow}>
-              <Text style={[styles.tableCell]}>{t.id}</Text>
-              <Text style={[styles.tableCell]}>{t.type}</Text>
-              <Text style={[styles.tableCell]}>R$ {t.value}</Text>
-              <Text style={[styles.tableCell]}>{t.category}</Text>
-              <Text style={[styles.tableCell]}>{t.userId}</Text>
-              <Text style={[styles.tableCell]}>{String(t.createdAt)}</Text>
-              <Text style={[styles.tableCell]}>{String(t.deletedAt)}</Text>
+              <Text style={[styles.tableCell]}>{getValue(t.id)}</Text>
+              <Text style={[styles.tableCell]}>{getType(t.type)}</Text>
+              <Text style={[styles.tableCell]}>R$ {getValue(t.value)}</Text>
+              <Text style={[styles.tableCell]}>{getValue(t.category)}</Text>
+              <Text style={[styles.tableCell]}>{getValue(t.createdAt)}</Text>
+              <Text style={[styles.tableCell]}>{getValue(t.deletedAt)}</Text>
             </View>
           ))}
         </View>
