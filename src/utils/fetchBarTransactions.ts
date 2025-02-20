@@ -1,9 +1,10 @@
-import axios from "axios";
 import ITransaction from "@/interfaces/ITransaction";
 import { getDateRange } from "./getDateRange";
 import { groupTransactions } from "./groupTransactions";
+import { getFetch } from "./getFetch";
+import { fetchBarParams } from "./fetchBarParams";
 
-export async function fetchTransactions(
+export async function fetchBarTransactions(
   userId: number,
   selectedPeriod: number,
   selectedCategory: string,
@@ -14,32 +15,25 @@ export async function fetchTransactions(
 ) {
   const { minDateISO, maxDateISO } = getDateRange(selectedPeriod);
 
-  const params = new URLSearchParams({
-    userId: userId.toString(),
-    minDate: minDateISO,
-    maxDate: maxDateISO
-  });
-
-  if (selectedCategory !== "Todos") params.append("category", selectedCategory);
-  if (selectedType !== "Todos") params.append("type", selectedType);
+  const params = fetchBarParams(
+    userId,
+    minDateISO,
+    maxDateISO,
+    selectedCategory,
+    selectedType
+  );
 
   try {
-    const response = await axios.get(
-      `http://localhost:3000/api/transactions?${params.toString()}`
-    );
-
-    const transactions = response.data as ITransaction[];
+    const transactions: ITransaction[] = await getFetch("transactions", params);
 
     if (allCategories.length === 0) {
       const uniqueCategories = [
-        ...new Set(transactions.map((t) => t.category))
+        ...new Set(transactions.map((t: ITransaction) => t.category))
       ];
       setAllCategories(uniqueCategories);
     }
 
     const groupedData = groupTransactions(transactions);
-
-    console.log("transactions:", transactions, "groupedData:", groupedData);
     setChartData(groupedData);
   } catch (error) {
     console.error("Erro ao buscar transações:", error);

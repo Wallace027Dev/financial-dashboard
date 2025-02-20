@@ -10,15 +10,9 @@ import {
   Legend
 } from "recharts";
 
-import { fetchTransactions } from "@/utils/fetchTransactions";
-import SelectFilter from "@/utils/selectFilter";
+import { fetchBarTransactions } from "@/utils/fetchBarTransactions";
+import { periodsForFilter } from "@/utils/periodsForFilter";
 import TransactionsFilters from "./TransactionFilters";
-
-const periods = [
-  { label: "Últimos 7 dias", value: 7 },
-  { label: "Últimos 30 dias", value: 30 },
-  { label: "Últimos 3 meses", value: 90 }
-];
 
 export default function TransactionsChart() {
   const [chartData, setChartData] = useState<any[]>([]);
@@ -29,7 +23,7 @@ export default function TransactionsChart() {
   const [allCategories, setAllCategories] = useState<string[]>([]);
 
   useEffect(() => {
-    fetchTransactions(
+    fetchBarTransactions(
       userId,
       selectedPeriod,
       selectedCategory,
@@ -55,7 +49,7 @@ export default function TransactionsChart() {
         selectedPeriod={selectedPeriod}
         setSelectedPeriod={setSelectedPeriod}
         allCategories={allCategories}
-        periods={periods}
+        periods={periodsForFilter}
       />
 
       {/* Gráfico */}

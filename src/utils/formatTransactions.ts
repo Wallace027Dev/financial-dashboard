@@ -1,8 +1,6 @@
 import ITransaction from "@/interfaces/ITransaction";
 
 export const formatTransactions = (transactions: ITransaction[]) => {
-  console.log("Transações antes do formato:", transactions);
-
   const formatted = transactions
     .map((t: ITransaction) => ({
       date: t.createdAt

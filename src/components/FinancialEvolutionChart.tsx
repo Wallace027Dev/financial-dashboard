@@ -11,18 +11,9 @@ import {
   CartesianGrid
 } from "recharts";
 
-import { getDateRange } from "@/utils/getDateRange";
-import { getTransactions } from "@/utils/getTransactions";
-import { formatTransactions } from "@/utils/formatTransactions";
 import SelectFilter from "./selectFilter";
-
-const periods = [
-  { value: 7, label: "Última semana" },
-  { value: 30, label: "Últimos 30 dias" },
-  { value: 90, label: "Últimos 3 meses" },
-  { value: 180, label: "Últimos 6 meses" },
-  { value: 365, label: "Último ano" }
-];
+import { fetchPieTransactions } from "@/utils/fetchPieTransactions";
+import { periodsForFilter } from "@/utils/periodsForFilter";
 
 export default function FinancialEvolutionChart() {
   const [chartData, setChartData] = useState<{ date: string; saldo: number }[]>(
@@ -32,33 +23,20 @@ export default function FinancialEvolutionChart() {
   const [userId, setUserId] = useState<number>(202);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const { minDateISO, maxDateISO } = getDateRange(selectedPeriod);
-        const transactions = await getTransactions(
-          userId,
-          minDateISO,
-          maxDateISO
-        );
-
-        setChartData(formatTransactions(transactions));
-      } catch (error) {
-        console.error("Erro ao buscar transações:", error);
-      }
-    };
-
-    fetchTransactions();
+    fetchPieTransactions(userId, selectedPeriod, setChartData);
   }, [selectedPeriod, userId]);
 
   return (
-    <div>
-      <h2 className="text-lg font-semibold mb-4">Evolução Financeira</h2>
+    <div className="max-w-7xl">
+      <h2 className="text-lg font-semibold mb-4 text-slate-950">
+        Evolução Financeira
+      </h2>
 
       <SelectFilter
         legend="Período"
         value={selectedPeriod}
         onChange={(e) => setSelectedPeriod(Number(e.target.value))}
-        options={periods}
+        options={periodsForFilter}
       />
 
       <ResponsiveContainer width="100%" height={400}>
