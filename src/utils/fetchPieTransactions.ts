@@ -7,7 +7,8 @@ import formatDateToBR from "./formatDateToBR";
 export async function fetchPieTransactions(
   userId: number,
   selectedPeriod: number,
-  setChartData: (data: any) => void
+  setChartData: (data: any) => void,
+  setRawTransactions: (data: ITransaction[]) => void
 ) {
   try {
     const { minDateISO, maxDateISO } = getDateRange(selectedPeriod);
@@ -21,10 +22,11 @@ export async function fetchPieTransactions(
     const formattedTransactions = transactions.map((t) => ({
       ...t,
       createdAtFormatted: formatDateToBR(t.createdAt),
-      deletedAtFormatted: t.deletedAt ? formatDateToBR(t.deletedAt) : null,
+      deletedAtFormatted: t.deletedAt ? formatDateToBR(t.deletedAt) : null
     }));
 
     setChartData(formatTransactions(formattedTransactions));
+    setRawTransactions(transactions);
   } catch (error) {
     console.error("Erro ao buscar transações:", error);
   }

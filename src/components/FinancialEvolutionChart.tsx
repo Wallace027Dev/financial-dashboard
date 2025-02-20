@@ -15,16 +15,19 @@ import SelectFilter from "./selectFilter";
 import { fetchPieTransactions } from "@/utils/fetchPieTransactions";
 import { periodsForFilter } from "@/utils/periodsForFilter";
 import formatDateToBR from "@/utils/formatDateToBR";
+import ExportButton from "./exportButton";
+import ITransaction from "@/interfaces/ITransaction";
 
 export default function FinancialEvolutionChart() {
   const [chartData, setChartData] = useState<{ date: string; saldo: number }[]>(
     []
   );
+  const [rawTransactions, setRawTransactions] = useState<ITransaction[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<number>(30);
   const [userId, setUserId] = useState<number>(202);
 
   useEffect(() => {
-    fetchPieTransactions(userId, selectedPeriod, setChartData);
+    fetchPieTransactions(userId, selectedPeriod, setChartData, setRawTransactions);
   }, [selectedPeriod, userId]);
 
   return (
@@ -33,12 +36,17 @@ export default function FinancialEvolutionChart() {
         Evolução Financeira
       </h2>
 
-      <SelectFilter
-        legend="Período"
-        value={selectedPeriod}
-        onChange={(e) => setSelectedPeriod(Number(e.target.value))}
-        options={periodsForFilter}
-      />
+      <div className="flex justify-between">
+        {/* Filtros */}
+        <SelectFilter
+          legend="Período"
+          value={selectedPeriod}
+          onChange={(e) => setSelectedPeriod(Number(e.target.value))}
+          options={periodsForFilter}
+        />
+
+        <ExportButton rawTransactions={rawTransactions} />
+      </div>
 
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
