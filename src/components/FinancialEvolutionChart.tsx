@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import {
   LineChart,
   Line,
@@ -11,49 +10,56 @@ import {
   ResponsiveContainer,
   CartesianGrid
 } from "recharts";
-import ITransaction from "@/interfaces/ITransaction";
+
 import { getDateRange } from "@/utils/getDateRange";
+import { getTransactions } from "@/utils/getTransactions";
+import { formatTransactions } from "@/utils/formatTransactions";
+import SelectFilter from "./selectFilter";
 
 const periods = [
-  { label: "Últimos 7 dias", value: 7 },
-  { label: "Últimos 30 dias", value: 30 },
-  { label: "Últimos 3 meses", value: 90 }
+  { value: 7, label: "Última semana" },
+  { value: 30, label: "Últimos 30 dias" },
+  { value: 90, label: "Últimos 3 meses" },
+  { value: 180, label: "Últimos 6 meses" },
+  { value: 365, label: "Último ano" }
 ];
 
 export default function FinancialEvolutionChart() {
-  const [chartData, setChartData] = useState<any[]>([]);
-  const [selectedPeriod, setSelectedPeriod] = useState(30);
-  const [userId, setUserId] = useState(202);
+  const [chartData, setChartData] = useState<{ date: string; saldo: number }[]>(
+    []
+  );
+  const [selectedPeriod, setSelectedPeriod] = useState<number>(30);
+  const [userId, setUserId] = useState<number>(202);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const { minDate, maxDate } = getDateRange(selectedPeriod);
-        const transactions = await getTransactions(userId, minDate, maxDate);
+        const { minDateISO, maxDateISO } = getDateRange(selectedPeriod);
+        const transactions = await getTransactions(
+          userId,
+          minDateISO,
+          maxDateISO
+        );
+
         setChartData(formatTransactions(transactions));
       } catch (error) {
         console.error("Erro ao buscar transações:", error);
       }
     };
-  
+
     fetchTransactions();
-  }, [selectedPeriod]);
+  }, [selectedPeriod, userId]);
 
   return (
     <div>
       <h2 className="text-lg font-semibold mb-4">Evolução Financeira</h2>
 
-      <select
-        className="mb-4 p-2 border rounded-md"
+      <SelectFilter
+        legend="Período"
         value={selectedPeriod}
         onChange={(e) => setSelectedPeriod(Number(e.target.value))}
-      >
-        {periods.map((period) => (
-          <option key={period.value} value={period.value}>
-            {period.label}
-          </option>
-        ))}
-      </select>
+        options={periods}
+      />
 
       <ResponsiveContainer width="100%" height={400}>
         <LineChart

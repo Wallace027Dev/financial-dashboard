@@ -24,6 +24,14 @@ const transactions: any = [
     createdAt: "2025-02-17"
   },
   {
+    id: 11,
+    type: "EXPENSE",
+    value: 1232.32,
+    category: "Mercado",
+    userId: 202,
+    createdAt: "2024-04-17"
+  },
+  {
     id: 818,
     type: "EXPENSE",
     value: 123,
