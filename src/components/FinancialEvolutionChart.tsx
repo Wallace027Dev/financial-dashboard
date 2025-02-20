@@ -12,6 +12,7 @@ import {
   CartesianGrid
 } from "recharts";
 import ITransaction from "@/interfaces/ITransaction";
+import { getDateRange } from "@/utils/getDateRange";
 
 const periods = [
   { label: "Últimos 7 dias", value: 7 },
@@ -26,36 +27,15 @@ export default function FinancialEvolutionChart() {
 
   useEffect(() => {
     const fetchTransactions = async () => {
-      const today = new Date();
-      const minDate = new Date();
-      minDate.setDate(today.getDate() - selectedPeriod);
-
-      const formattedMaxDate = today.toISOString().split("T")[0];
-      const formattedMinDate = minDate.toISOString().split("T")[0];
-
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/transactions?userId=${userId}&minDate=${formattedMinDate}&maxDate=${formattedMaxDate}`
-        );
-
-        let saldo = 0;
-        const formattedData = response.data.map((transaction: ITransaction) => {
-          saldo +=
-            transaction.type === "RECIPE"
-              ? transaction.value
-              : -transaction.value;
-          return {
-            date: new Date(transaction.createdAt).toLocaleDateString("pt-BR"),
-            saldo
-          };
-        });
-
-        setChartData(formattedData);
+        const { minDate, maxDate } = getDateRange(selectedPeriod);
+        const transactions = await getTransactions(userId, minDate, maxDate);
+        setChartData(formatTransactions(transactions));
       } catch (error) {
         console.error("Erro ao buscar transações:", error);
       }
     };
-
+  
     fetchTransactions();
   }, [selectedPeriod]);
 
