@@ -11,10 +11,10 @@ import {
 } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
 
-export default function exportPdf(formattedTransactions: ITransaction[]) {
-  console.log("Dentro do exportPdf");
-  const fileName = `transacoes_${formatDateToBR(new Date())}_${generateID()}.pdf`;
-
+export default function exportPdf(
+  formattedTransactions: ITransaction[],
+  fileName: string
+) {
   // Definindo os estilos
   const styles = StyleSheet.create({
     page: { padding: 30 },

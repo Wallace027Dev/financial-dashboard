@@ -11,7 +11,6 @@ export default function ExportButton({ rawTransactions }: IExportButtonProps) {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const handleExport = (type: "csv" | "pdf") => {
-    console.log("Clicou no tipo de exportação: ", type);
     handleExportTransaction(type, rawTransactions);
     setIsOpen(false);
   };
@@ -43,14 +42,17 @@ export default function ExportButton({ rawTransactions }: IExportButtonProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute bg-white border border-gray-300 rounded-md mt-2 w-40 shadow-lg">
+        <div
+          className="absolute bg-white border border-gray-300 rounded-md mt-2 w-40 shadow-lg"
+          style={{ pointerEvents: "auto", zIndex: 10 }}
+        >
           <ul>
             <li>
               <button
                 onClick={() => handleExport("pdf")}
                 className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
               >
-                Exportar PDF
+                PDF
               </button>
             </li>
             <li>
@@ -58,7 +60,7 @@ export default function ExportButton({ rawTransactions }: IExportButtonProps) {
                 onClick={() => handleExport("csv")}
                 className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
               >
-                Exportar CSV
+                CSV
               </button>
             </li>
           </ul>
