@@ -10,8 +10,8 @@ import {
   Legend
 } from "recharts";
 
-import { fetchBarTransactions } from "@/utils/fetchBarTransactions";
-import { periodsForFilter } from "@/utils/periodsForFilter";
+import fetchBarTransactions from "@/utils/fetchBarTransactions";
+import periodsForFilter from "@/utils/periodsForFilter";
 import TransactionsFilters from "./TransactionFilters";
 import ITransaction from "@/interfaces/ITransaction";
 import ExportButton from "./exportButton";

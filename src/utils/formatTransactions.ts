@@ -1,6 +1,6 @@
 import ITransaction from "@/interfaces/ITransaction";
 
-export const formatTransactions = (transactions: ITransaction[]) => {
+export default function formatTransactions(transactions: ITransaction[]) {
   const formatted = transactions
     .map((t: ITransaction) => ({
       date: t.createdAt
@@ -11,4 +11,4 @@ export const formatTransactions = (transactions: ITransaction[]) => {
     .sort((a, b) => a.date.localeCompare(b.date));
 
   return formatted;
-};
+}

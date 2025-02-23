@@ -12,8 +12,8 @@ import {
 } from "recharts";
 
 import SelectFilter from "./selectFilter";
-import { fetchPieTransactions } from "@/utils/fetchPieTransactions";
-import { periodsForFilter } from "@/utils/periodsForFilter";
+import fetchPieTransactions from "@/utils/fetchPieTransactions";
+import periodsForFilter from "@/utils/periodsForFilter";
 import formatDateToBR from "@/utils/formatDateToBR";
 import ExportButton from "./exportButton";
 import ITransaction from "@/interfaces/ITransaction";

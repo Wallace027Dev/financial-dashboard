@@ -1,6 +1,6 @@
 import { json2csv } from "json-2-csv";
 import { saveAs } from "file-saver";
-import { formatTransactions } from "./formatTransactions";
+import formatTransactions from "./formatTransactions";
 
 export default function exportCsv(data: any[], fileName: string) {
   try {

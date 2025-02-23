@@ -1,11 +1,11 @@
 import ITransaction from "@/interfaces/ITransaction";
 import formatDateToBR from "./formatDateToBR";
-import { groupTransactions } from "./groupTransactions";
-import { getDateRange } from "./getDateRange";
-import { getFetch } from "./getFetch";
-import { fetchBarParams } from "./fetchBarParams";
+import groupTransactions from "./groupTransactions";
+import getDateRange from "./getDateRange";
+import getFetch from "./getFetch";
+import fetchBarParams from "./fetchBarParams";
 
-export async function fetchBarTransactions(
+export default async function fetchBarTransactions(
   userId: number,
   selectedPeriod: number,
   selectedCategory: string,

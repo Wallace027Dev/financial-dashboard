@@ -1,4 +1,4 @@
-export function fetchBarParams(
+export default function fetchBarParams(
   userId: number,
   minDateISO: string,
   maxDateISO: string,

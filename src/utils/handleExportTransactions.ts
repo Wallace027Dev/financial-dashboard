@@ -2,7 +2,6 @@ import ITransaction from "@/interfaces/ITransaction";
 import exportPdf from "@/components/exportPdf";
 import exportCsv from "./exportCsv";
 import generateFileName from "./generateFileName";
-import { formatTransactions } from "./formatTransactions";
 
 export async function handleExportTransaction(
   format: "csv" | "pdf",

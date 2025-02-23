@@ -1,10 +1,10 @@
 import ITransaction from "@/interfaces/ITransaction";
-import { formatTransactions } from "./formatTransactions";
-import { getDateRange } from "./getDateRange";
-import { getFetch } from "./getFetch";
+import formatTransactions from "./formatTransactions";
+import getDateRange from "./getDateRange";
+import getFetch from "./getFetch";
 import formatDateToBR from "./formatDateToBR";
 
-export async function fetchPieTransactions(
+export default async function fetchPieTransactions(
   userId: number,
   selectedPeriod: number,
   setChartData: (data: any) => void,

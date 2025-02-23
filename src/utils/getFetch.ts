@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const getFetch = async (
+export default async function getFetch(
   endpoint: string,
   params?: Record<string, string | number>
-) => {
+) {
   try {
     const queryString = params
       ? "?" + new URLSearchParams(params as Record<string, string>).toString()
@@ -17,4 +17,4 @@ export const getFetch = async (
     console.error(`Erro ao buscar ${endpoint}:`, error);
     throw error;
   }
-};
+}

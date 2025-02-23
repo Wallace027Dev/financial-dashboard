@@ -1,6 +1,6 @@
 import ITransaction from "@/interfaces/ITransaction";
 
-export const groupTransactions = (transactions: ITransaction[]) => {
+export default function groupTransactions(transactions: ITransaction[]) {
   return transactions.reduce((acc: any[], transaction: ITransaction) => {
     const existing = acc.find((item) => item.category === transaction.category);
 
@@ -19,4 +19,4 @@ export const groupTransactions = (transactions: ITransaction[]) => {
     }
     return acc;
   }, []);
-};
+}

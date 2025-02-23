@@ -1,4 +1,4 @@
-export function getDateRange(selectedPeriod: number) {
+export default function getDateRange(selectedPeriod: number) {
   const today = new Date();
   const minDate = new Date();
   minDate.setDate(today.getDate() - selectedPeriod);
