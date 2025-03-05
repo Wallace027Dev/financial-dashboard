@@ -1,22 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import transactionService from "@/services/transactionService";
 import { validateFilters } from "@/utils/transactionHelpers";
 import { handleError } from "@/utils/handleError";
+import { ITransactionService } from "@/interfaces/ITransactionService";
 
 class TransactionController {
+  constructor(private transactionService: ITransactionService) {}
+
   async listAll(req: NextRequest) {
     try {
       const filters = validateFilters(req.nextUrl.searchParams);
-      const response = await transactionService.listAll(filters);
+      const transactions = await this.transactionService.listAll(filters);
 
-      if (!response.length) {
+      if (!transactions.length) {
         return NextResponse.json(
           { message: "Transactions not found" },
           { status: 404 }
         );
       }
 
-      return NextResponse.json(response, { status: 200 });
+      return NextResponse.json(transactions, { status: 200 });
     } catch (error: any) {
       return handleError(error);
     }
@@ -25,8 +27,8 @@ class TransactionController {
   async create(req: NextRequest) {
     try {
       const transaction = await req.json();
-      const response = await transactionService.create(transaction);
-      return NextResponse.json(response, { status: 200 });
+      const response = await this.transactionService.create(transaction);
+      return NextResponse.json(response, { status: 201 });
     } catch (error: any) {
       return handleError(error);
     }
@@ -35,7 +37,7 @@ class TransactionController {
   async update(req: NextRequest) {
     try {
       const newData = await req.json();
-      const updatedTransaction = await transactionService.update(newData);
+      const updatedTransaction = await this.transactionService.update(newData);
       return NextResponse.json(updatedTransaction, { status: 200 });
     } catch (error: any) {
       return handleError(error);
@@ -44,21 +46,20 @@ class TransactionController {
 
   async delete(req: NextRequest) {
     try {
-      // Resgatando o ID passado na rota
-      const pathParts = req.nextUrl.pathname.split("/");
-      const id = Number(pathParts[pathParts.length - 1]);
-
+      const id = Number(req.nextUrl.pathname.split("/").pop());
       if (isNaN(id)) {
         return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
       }
 
-      const updatedTransaction = await transactionService.delete(id);
-      return NextResponse.json(updatedTransaction, { status: 200 });
+      await this.transactionService.delete(id);
+      return NextResponse.json(
+        { message: "Transaction deleted successfully" },
+        { status: 200 }
+      );
     } catch (error: any) {
       return handleError(error);
     }
   }
 }
 
-const transactionController = new TransactionController();
-export default transactionController;
+export default TransactionController;
