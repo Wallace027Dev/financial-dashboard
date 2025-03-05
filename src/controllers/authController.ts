@@ -6,7 +6,17 @@ class AuthController {
     try {
       const data = await req.json();
       const response = await authService.authenticate(data);
-      return NextResponse.json(response, { status: 200 });
+
+      const res = NextResponse.json(response, { status: 200 });
+
+      res.cookies.set("token", response.data.token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: 60 * 60 * 24
+      });
+
+      return res;
     } catch (error: any) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }

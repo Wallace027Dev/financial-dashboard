@@ -69,7 +69,7 @@ class AuthService {
       name: validatedUser.name,
       email: validatedUser.email,
       password: hashedPassword,
-      balance: 0.00,
+      balance: 0.0,
       createdAt: new Date().toISOString().split("T")[0]
     };
 
@@ -81,12 +81,12 @@ class AuthService {
     // Gerando token
     const token = await this.generateToken(newUser.email);
 
-    return { user: newUser, token };
+    return { data: { user: newUser, token } };
   }
 
   async generateToken(email: string) {
     // Verifica se existe uma chave privada
-    const privateKey = process.env.PRIVATE_KEY;
+    const privateKey = process.env.JWT_SECRET;
     if (!privateKey) throw new Error("Private key is not defined!");
 
     return jsonwebtoken.sign({ email: email }, privateKey, {
