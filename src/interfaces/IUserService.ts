@@ -2,7 +2,12 @@ import IUser from "./IUser";
 
 export interface IUserService {
   findById(id: number): Promise<IUser | null>;
-  create(data: IUser): Promise<IUser>;
+  findByEmail(email: string): Promise<IUser | null>;
+  createUser(data: Partial<IUser>): Promise<IUser>;
   update(id: number, data: Partial<IUser>): Promise<IUser>;
   delete(id: number): Promise<void>;
+  validatePassword(
+    inputPassword: string,
+    userPassword: string
+  ): Promise<boolean>;
 }

@@ -1,13 +1,14 @@
-import authService from "@/services/authService";
+import { IAuthenticate } from "@/interfaces/IAuthenticate";
 import { NextRequest, NextResponse } from "next/server";
 
 class AuthController {
+  constructor(private authService: IAuthenticate) {}
   async authUser(req: NextRequest) {
     try {
       const data = await req.json();
 
       // Chama o serviço de autenticação passando os dados do usuário
-      const response = await authService.authenticate(data);
+      const response = await this.authService.authenticate(data);
       // Cria uma resposta JSON com o status 200, indicando sucesso na autenticação
       const responseJSON = NextResponse.json(response, { status: 200 });
 
@@ -27,5 +28,4 @@ class AuthController {
   }
 }
 
-const authController = new AuthController();
-export default authController;
+export default AuthController;

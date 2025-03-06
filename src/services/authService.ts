@@ -1,9 +1,11 @@
 import IUser from "@/interfaces/IUser";
 import userZod from "@/utils/userZod";
-import userService from "./userService";
 import tokenService from "./tokenService";
+import { IUserService } from "@/interfaces/IUserService";
 
 class AuthService {
+  constructor(private userService: IUserService) {}
+
   async authenticate(data: Partial<IUser>) {
     if (!data.email) {
       throw new Error("Email is required");
@@ -12,7 +14,7 @@ class AuthService {
     const validatedUser = this.validateData(data);
 
     // Verifica se email já existe na tabela
-    const user = await userService.findByEmail(validatedUser.email);
+    const user = await this.userService.findByEmail(validatedUser.email);
 
     // Se usuário já existir, retorna o usuário caso autenticado
     if (user) {
@@ -36,23 +38,25 @@ class AuthService {
 
   private async login(data: Partial<IUser>, user: IUser) {
     // Verificando se senhas conferem
-    const isMatch = await userService.validatePassword(data.password!, user.password);
+    const isMatch = await this.userService.validatePassword(
+      data.password!,
+      user.password
+    );
     if (!isMatch) {
       throw new Error("Incorrect password.");
     }
 
     // Criando token, caso autenticado
     const token = tokenService.generateToken(user.email);
-    return  { user, token };
+    return { user, token };
   }
 
   private async register(data: Partial<IUser>) {
-    const newUser = await userService.createUser(data);
+    const newUser = await this.userService.createUser(data);
     const token = tokenService.generateToken(newUser.email);
     // Retorna o usuário depois de criado e o token
     return { user: newUser, token };
   }
 }
 
-const authService = new AuthService();
-export default authService;
+export default AuthService;

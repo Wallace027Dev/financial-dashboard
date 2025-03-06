@@ -1,7 +1,7 @@
+import { IUserService } from '@/interfaces/IUserService';
 import ITransaction from "@/interfaces/ITransaction";
 import ITransactionFilters from "@/interfaces/ITransactionFilters";
 import { ITransactionService } from "@/interfaces/ITransactionService";
-import { IUserService } from "@/interfaces/IUserService";
 import transactions from "@/mocks/transaction";
 import transactionZod from "@/utils/transactionZod";
 

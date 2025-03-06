@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateFilters } from "@/utils/transactionHelpers";
 import { handleError } from "@/utils/handleError";
 import { ITransactionService } from "@/interfaces/ITransactionService";
+import { ITransactionController } from "@/interfaces/ITransactionController";
 
 class TransactionController {
-  constructor(private transactionService: ITransactionService) {}
+  constructor(private transactionService: ITransactionController) {}
 
   async listAll(req: NextRequest) {
     try {
