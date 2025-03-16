@@ -1,9 +1,8 @@
-import ITransaction from "./ITransaction";
-import ITransactionFilters from "./ITransactionFilters";
+import { NextRequest } from "next/server";
 
 export interface ITransactionController {
-  listAll(filters: ITransactionFilters): Promise<ITransaction[]>;
-  create(data: ITransaction): Promise<ITransaction>;
-  update(data: Partial<ITransaction>): Promise<ITransaction>;
-  delete(id: number): Promise<ITransaction>;
+  listAll(req: NextRequest): Promise<any>;
+  create(dreq: NextRequest): Promise<any>;
+  update(req: NextRequest): Promise<any>;
+  delete(req: NextRequest): Promise<any>;
 }

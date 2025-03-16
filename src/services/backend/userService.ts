@@ -3,7 +3,7 @@ import IUser from "@/interfaces/IUser";
 import users from "@/mocks/users";
 import { IUserService } from "@/interfaces/IUserService";
 
-class UserService implements IUserService {
+export class UserService implements IUserService {
   update(id: number, data: Partial<IUser>): Promise<IUser> {
     throw new Error("Method not implemented.");
   }
@@ -41,13 +41,4 @@ class UserService implements IUserService {
     users.push(newUser);
     return newUser;
   }
-
-  async validatePassword(
-    inputPassword: string,
-    userPassword: string
-  ): Promise<boolean> {
-    return bcrypt.compare(inputPassword, userPassword);
-  }
 }
-
-export default UserService;

@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "./utils/auth";
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
+  // Obtém o token do cabeçalho Authorization
+  const token = req.headers.get("Authorization")?.replace("Bearer ", "");
 
   if (!token || !verifyToken(token)) {
     // Se o token não existir ou for inválido, redireciona para o login

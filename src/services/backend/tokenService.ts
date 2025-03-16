@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-class TokenService {
+export class TokenService {
   private secret: string;
 
   // Define o segredo, ou retorna um erro caso não exista
@@ -21,6 +21,3 @@ class TokenService {
     return jwt.verify(token, this.secret);
   }
 }
-
-const tokenService = new TokenService();
-export default tokenService;

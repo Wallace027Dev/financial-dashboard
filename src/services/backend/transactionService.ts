@@ -5,7 +5,7 @@ import { ITransactionService } from "@/interfaces/ITransactionService";
 import transactions from "@/mocks/transaction";
 import transactionZod from "@/utils/transactionZod";
 
-class TransactionService implements ITransactionService {
+export class TransactionService implements ITransactionService {
   constructor(private userService: IUserService) {}
 
   private async updateUserBalance(
@@ -80,5 +80,3 @@ class TransactionService implements ITransactionService {
     return transaction;
   }
 }
-
-export default TransactionService;

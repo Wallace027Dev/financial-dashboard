@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateFilters } from "@/utils/transactionHelpers";
 import { handleError } from "@/utils/handleError";
-import { ITransactionService } from "@/interfaces/ITransactionService";
+import { TransactionService } from "@/services/backend/transactionService";
 import { ITransactionController } from "@/interfaces/ITransactionController";
 
-class TransactionController {
-  constructor(private transactionService: ITransactionController) {}
+export class TransactionController implements ITransactionController {
+  private transactionService: TransactionService;
+  constructor(transactionService: TransactionService) {
+    this.transactionService = transactionService;
+  }
 
   async listAll(req: NextRequest) {
     try {
@@ -62,5 +65,3 @@ class TransactionController {
     }
   }
 }
-
-export default TransactionController;

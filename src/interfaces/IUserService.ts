@@ -6,8 +6,4 @@ export interface IUserService {
   createUser(data: Partial<IUser>): Promise<IUser>;
   update(id: number, data: Partial<IUser>): Promise<IUser>;
   delete(id: number): Promise<void>;
-  validatePassword(
-    inputPassword: string,
-    userPassword: string
-  ): Promise<boolean>;
 }

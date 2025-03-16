@@ -1,8 +1,13 @@
-import { IAuthenticate } from "@/interfaces/IAuthenticate";
+import { IAuthController } from "@/interfaces/IAuthController";
+import { AuthService } from "@/services/backend/authService";
 import { NextRequest, NextResponse } from "next/server";
 
-class AuthController {
-  constructor(private authService: IAuthenticate) {}
+export class AuthController implements IAuthController {
+  private authService: AuthService;
+  constructor(authService: AuthService) {
+    this.authService = authService;
+  }
+
   async authUser(req: NextRequest) {
     try {
       const data = await req.json();
@@ -27,5 +32,3 @@ class AuthController {
     }
   }
 }
-
-export default AuthController;
