@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import users from "@/mocks/users";
-import { IUser, IUserDB } from "@/interfaces/IUser";
+import { IUser, IUserBase, IUserDB } from "@/interfaces/IUser";
 
 export class UserService {
   update(id: number, data: IUser): void {
@@ -24,12 +24,12 @@ export class UserService {
     return users.find((user: IUser) => user.email === email);
   }
 
-  async createUser(data: Partial<IUser>): Promise<IUserDB> {
+  async createUser(data: IUserBase): Promise<IUserDB> {
     const hashedPassword = await bcrypt.hash(data.password!, 10);
     const newUser = {
       id: Math.floor(Math.random() * 1000),
-      name: data.name!,
-      email: data.email!,
+      name: data.name,
+      email: data.email,
       password: hashedPassword,
       balance: 0.0,
       createdAt: new Date(),
