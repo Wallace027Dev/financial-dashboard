@@ -1,8 +1,7 @@
-import { IAuthController } from "@/interfaces/IAuthController";
 import { AuthService } from "@/services/backend/authService";
 import { NextRequest, NextResponse } from "next/server";
 
-export class AuthController implements IAuthController {
+export class AuthController {
   private authService: AuthService;
   constructor(authService: AuthService) {
     this.authService = authService;

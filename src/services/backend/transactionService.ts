@@ -1,18 +1,18 @@
-import { IUserService } from '@/interfaces/IUserService';
-import ITransaction from "@/interfaces/ITransaction";
+import { ITransaction, ITransactionBase } from "@/interfaces/ITransaction";
 import ITransactionFilters from "@/interfaces/ITransactionFilters";
-import { ITransactionService } from "@/interfaces/ITransactionService";
 import transactions from "@/mocks/transaction";
 import transactionZod from "@/utils/transactionZod";
+import { UserService } from "./userService";
+import { IUserDB } from "@/interfaces/IUser";
 
-export class TransactionService implements ITransactionService {
-  constructor(private userService: IUserService) {}
+export class TransactionService {
+  constructor(private userService: UserService) {}
 
   private async updateUserBalance(
     userId: number,
     transactionValue: number,
     type: "RECIPE" | "EXPENSE"
-  ) {
+  ): Promise<IUserDB> {
     const user = await this.userService.findById(userId);
     if (!user) {
       throw new Error("User not found");
@@ -22,7 +22,7 @@ export class TransactionService implements ITransactionService {
     return user;
   }
 
-  async validateData(data: Partial<ITransaction>) {
+  validateData(data: ITransactionBase): void {
     const result = transactionZod.safeParse(data);
     if (!result.success) {
       throw new Error(result.error.format().toString());
@@ -61,8 +61,8 @@ export class TransactionService implements ITransactionService {
     return transaction;
   }
 
-  async update(data: Partial<ITransaction>) {
-    const transaction = await this.findById(data.id!);
+  async update(id: number, data: ITransactionBase) {
+    const transaction = await this.findById(id);
     Object.assign(transaction, data, { updatedAt: new Date() });
     return transaction;
   }

@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateFilters } from "@/utils/transactionHelpers";
 import { handleError } from "@/utils/handleError";
 import { TransactionService } from "@/services/backend/transactionService";
-import { ITransactionController } from "@/interfaces/ITransactionController";
 
-export class TransactionController implements ITransactionController {
+export class TransactionController {
   private transactionService: TransactionService;
   constructor(transactionService: TransactionService) {
     this.transactionService = transactionService;
@@ -40,8 +39,12 @@ export class TransactionController implements ITransactionController {
 
   async update(req: NextRequest) {
     try {
+      const id = "Vai pegar no routeParams";
       const newData = await req.json();
-      const updatedTransaction = await this.transactionService.update(newData);
+      const updatedTransaction = await this.transactionService.update(
+        1,// Muda depois
+        newData
+      );
       return NextResponse.json(updatedTransaction, { status: 200 });
     } catch (error: any) {
       return handleError(error);

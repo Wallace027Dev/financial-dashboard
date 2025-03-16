@@ -1,12 +1,13 @@
-interface ITransaction {
-  id: number;
-  type: "RECIPE" | "EXPENSE",
+export interface ITransactionBase {
+  type: "RECIPE" | "EXPENSE";
   value: number;
   category: string;
   userId: number;
+}
+
+export interface ITransaction extends ITransactionBase {
+  id: number;
   createdAt: Date;
   updatedAt: Date | null;
   deletedAt: Date | null;
 }
-
-export default ITransaction;

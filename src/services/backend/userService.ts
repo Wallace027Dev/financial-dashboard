@@ -1,19 +1,18 @@
 import bcrypt from "bcryptjs";
-import IUser from "@/interfaces/IUser";
 import users from "@/mocks/users";
-import { IUserService } from "@/interfaces/IUserService";
+import { IUser, IUserDB } from "@/interfaces/IUser";
 
-export class UserService implements IUserService {
-  update(id: number, data: Partial<IUser>): Promise<IUser> {
+export class UserService {
+  update(id: number, data: IUser): void {
     throw new Error("Method not implemented.");
   }
 
-  delete(id: number): Promise<void> {
+  delete(id: number): void {
     throw new Error("Method not implemented.");
   }
 
-  async findById(id: number) {
-    const user = await users.find((user: IUser) => user.id === Number(id));
+  async findById(id: number): Promise<IUserDB> {
+    const user = await users.find((user: IUserDB) => user.id === Number(id));
 
     if (!user) {
       throw new Error("User not found");
@@ -21,11 +20,11 @@ export class UserService implements IUserService {
     return user;
   }
 
-  async findByEmail(email: string) {
+  async findByEmail(email: string): Promise<IUserDB> {
     return users.find((user: IUser) => user.email === email);
   }
 
-  async createUser(data: Partial<IUser>): Promise<IUser> {
+  async createUser(data: Partial<IUser>): Promise<IUserDB> {
     const hashedPassword = await bcrypt.hash(data.password!, 10);
     const newUser = {
       id: Math.floor(Math.random() * 1000),
