@@ -1,4 +1,4 @@
-import ITransaction from "@/interfaces/ITransaction";
+import { ITransaction } from "@/interfaces/ITransaction";
 import { handleExportTransaction } from "@/utils/handleExportTransactions";
 import { useEffect, useRef, useState } from "react";
 
@@ -36,7 +36,7 @@ export default function ExportButton({ rawTransactions }: IExportButtonProps) {
     <div className="relative" ref={menuRef}>
       <button
         onClick={toggleMenu}
-        className="bg-blue-500 px-4 py-2 text-white font-bold rounded-md"
+        className="bg-blue-500 px-4 py-2 text-white font-bold rounded-md hover:bg-hover hover:text-background cursor-pointer"
       >
         Exportar
       </button>

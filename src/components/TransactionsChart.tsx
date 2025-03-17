@@ -13,7 +13,7 @@ import {
 import fetchBarTransactions from "@/utils/fetchBarTransactions";
 import periodsForFilter from "@/utils/periodsForFilter";
 import TransactionsFilters from "./TransactionFilters";
-import ITransaction from "@/interfaces/ITransaction";
+import { ITransaction } from "@/interfaces/ITransaction";
 import ExportButton from "./exportButton";
 
 export default function TransactionsChart() {
@@ -40,7 +40,7 @@ export default function TransactionsChart() {
 
   return (
     <div className="max-w-7xl">
-      <h2 className="text-lg font-semibold mb-4 text-slate-950">
+      <h2 className="text-lg font-semibold mb-4">
         Receitas e Despesas por Categoria
       </h2>
       <div className="flex justify-between">
@@ -69,8 +69,8 @@ export default function TransactionsChart() {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="receita" fill="#82ca9d" />
-          <Bar dataKey="despesa" fill="#ff6b6b" />
+          <Bar dataKey="receita" fill="#00AEEF" />
+          <Bar dataKey="despesa" fill="#00FF99" />
         </BarChart>
       </ResponsiveContainer>
     </div>

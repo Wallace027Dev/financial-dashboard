@@ -1,4 +1,4 @@
-import ITransaction from "@/interfaces/ITransaction";
+import { ITransaction } from "@/interfaces/ITransaction";
 import {
   Document,
   Page,

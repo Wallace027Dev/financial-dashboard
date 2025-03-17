@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import {
   LineChart,
@@ -16,7 +14,7 @@ import fetchPieTransactions from "@/utils/fetchPieTransactions";
 import periodsForFilter from "@/utils/periodsForFilter";
 import formatDateToBR from "@/utils/formatDateToBR";
 import ExportButton from "./exportButton";
-import ITransaction from "@/interfaces/ITransaction";
+import { ITransaction } from "@/interfaces/ITransaction";
 
 export default function FinancialEvolutionChart() {
   const [chartData, setChartData] = useState<{ date: string; saldo: number }[]>(
@@ -27,12 +25,17 @@ export default function FinancialEvolutionChart() {
   const [userId, setUserId] = useState<number>(202);
 
   useEffect(() => {
-    fetchPieTransactions(userId, selectedPeriod, setChartData, setRawTransactions);
+    fetchPieTransactions(
+      userId,
+      selectedPeriod,
+      setChartData,
+      setRawTransactions
+    );
   }, [selectedPeriod, userId]);
 
   return (
     <div className="max-w-7xl">
-      <h2 className="text-lg font-semibold mb-4 text-slate-950">
+      <h2 className="text-lg font-semibold mb-4">
         Evolução Financeira
       </h2>
 
@@ -63,7 +66,7 @@ export default function FinancialEvolutionChart() {
           <Line
             type="monotone"
             dataKey="saldo"
-            stroke="#8884d8"
+            stroke="#8A2BE2"
             strokeWidth={2}
             dot={false}
           />
