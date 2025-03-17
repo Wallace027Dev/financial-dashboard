@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
 import "@/styles/globals.css";
+import { Poppins, Roboto_Mono } from "next/font/google";
 
-// Importando a fonte Poppins
 const poppins = Poppins({
   weight: ["400", "600", "700"],
   subsets: ["latin"],
   variable: "--font-poppins"
+});
+
+const robotoMono = Roboto_Mono({
+  weight: ["400", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-robotoMono"
 });
 
 export const metadata: Metadata = {
@@ -22,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body
-        className={`${poppins.variable} antialiased bg-background text-foreground flex justify-center w-full h-screen`}
+        className={`${poppins.variable} ${robotoMono.variable} grid-custom antialiased bg-background text-foreground h-screen place-self-center py-8`}
       >
         {children}
       </body>

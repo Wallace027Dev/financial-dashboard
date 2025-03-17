@@ -36,7 +36,7 @@ export default function ExportButton({ rawTransactions }: IExportButtonProps) {
     <div className="relative" ref={menuRef}>
       <button
         onClick={toggleMenu}
-        className="bg-blue-500 px-4 py-2 text-white font-bold rounded-md hover:bg-hover hover:text-background cursor-pointer"
+        className="bg-blue-500 px-5 py-2 text-white font-bold rounded-md hover:bg-hover hover:text-background cursor-pointer"
       >
         Exportar
       </button>

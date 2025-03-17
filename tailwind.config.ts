@@ -27,8 +27,8 @@ export default {
       },
 
       fontFamily: {
-        sans: ["Poppins", "sans-serif"],
-        mono: ["Roboto Mono", "monospace"]
+        poppins: "var(--font-poppins), sans-serif",
+        robotoMono: "var(--font-robotoMono), monospace"
       }
     }
   },

@@ -14,13 +14,13 @@ function SelectFilter({
   return (
     <fieldset className="flex flex-col">
       {legend && (
-        <legend className="text-sm font-medium" id={selectId}>
+        <legend className="text-base font-medium" id={selectId}>
           {legend}
         </legend>
       )}
       <select
         id={selectId}
-        className="p-2 border rounded-md text-background cursor-pointer"
+        className="p-2 my-1 border rounded-md text-background cursor-pointer"
         value={value}
         onChange={onChange}
         aria-labelledby={selectId}

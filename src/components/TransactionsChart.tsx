@@ -39,7 +39,7 @@ export default function TransactionsChart() {
   }, [selectedCategory, selectedType, selectedPeriod, userId]);
 
   return (
-    <div className="max-w-7xl">
+    <div className="max-w-[1520px]">
       <h2 className="text-lg font-semibold mb-4">
         Receitas e Despesas por Categoria
       </h2>
