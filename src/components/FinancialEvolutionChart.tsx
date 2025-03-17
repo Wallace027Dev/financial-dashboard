@@ -35,7 +35,7 @@ export default function FinancialEvolutionChart() {
 
   return (
     <div className="max-w-[1520px]">
-      <h2 className="text-lg font-semibold mb-4">
+      <h2 className="text-xl font-semibold mb-2">
         Evolução Financeira
       </h2>
 
