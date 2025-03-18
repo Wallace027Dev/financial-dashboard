@@ -16,13 +16,16 @@ import formatDateToBR from "@/utils/formatDateToBR";
 import ExportButton from "./exportButton";
 import { ITransaction } from "@/interfaces/ITransaction";
 
-export default function FinancialEvolutionChart() {
+interface IFinancialEvolutionChartProps {
+  userId: number;
+}
+
+export default function FinancialEvolutionChart({ userId }: IFinancialEvolutionChartProps) {
   const [chartData, setChartData] = useState<{ date: string; saldo: number }[]>(
     []
   );
   const [rawTransactions, setRawTransactions] = useState<ITransaction[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<number>(30);
-  const [userId, setUserId] = useState<number>(202);
 
   useEffect(() => {
     fetchPieTransactions(

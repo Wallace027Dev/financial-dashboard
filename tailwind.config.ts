@@ -14,7 +14,8 @@ export default {
         background: "#1E1E2E",
         foreground: "#FEF9EE",
         hover: "#00FF99",
-
+        
+        type: { recipe: "#38E238", expense: "#FE877C" },
         categories: {
           house: "#66BB6A",
           leisure: "#FF9800",

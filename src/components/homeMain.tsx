@@ -1,11 +1,20 @@
+import { useState } from "react";
+import ExpensesTable from "./expensesTable";
 import FinancialEvolutionChart from "./FinancialEvolutionChart";
 import TransactionsChart from "./TransactionsChart";
 
-export default function HomeMain() {
+interface ITransactionChartProps {
+  userId: number;
+}
+
+export default function HomeMain({ userId }: ITransactionChartProps) {
   return (
     <main id="main" className="py-4 min-h-[90vh]">
-      <TransactionsChart />
-      <FinancialEvolutionChart />
+      <section>
+        <TransactionsChart userId={userId} />
+        <ExpensesTable userId={userId} />
+      </section>
+      <FinancialEvolutionChart  userId={userId} />
     </main>
   );
 }

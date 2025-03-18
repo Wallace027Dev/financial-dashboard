@@ -1,4 +1,4 @@
-import ITransaction from "@/interfaces/ITransaction";
+import { ITransaction } from "@/interfaces/ITransaction";
 import formatDateToBR from "./formatDateToBR";
 import groupTransactions from "./groupTransactions";
 import getDateRange from "./getDateRange";

@@ -1,7 +1,17 @@
+export enum Category {
+  HOUSE = "Casa",
+  LEISURE = "Lazer",
+  TRANSPORT = "Transporte",
+  EDUCATION = "Educação",
+  CLOTHING = "Vestuário",
+  HEALTH = "Saúde",
+  FIXED_EXPENSE = "Despesas fixas"
+}
+
 export interface ITransactionBase {
   type: "RECIPE" | "EXPENSE";
   value: number;
-  category: string;
+  category: Category;
   userId: number;
 }
 

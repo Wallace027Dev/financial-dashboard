@@ -16,13 +16,16 @@ import TransactionsFilters from "./TransactionFilters";
 import { ITransaction } from "@/interfaces/ITransaction";
 import ExportButton from "./exportButton";
 
-export default function TransactionsChart() {
+interface ITransactionChartProps {
+  userId: number;
+}
+
+export default function TransactionsChart({ userId }: ITransactionChartProps) {
   const [chartData, setChartData] = useState<any[]>([]);
   const [rawTransactions, setRawTransactions] = useState<ITransaction[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [selectedType, setSelectedType] = useState("Todos");
   const [selectedPeriod, setSelectedPeriod] = useState(30);
-  const [userId, setUserId] = useState(202);
   const [allCategories, setAllCategories] = useState<string[]>([]);
 
   useEffect(() => {
