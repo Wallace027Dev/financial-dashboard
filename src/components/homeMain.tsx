@@ -9,7 +9,7 @@ interface ITransactionChartProps {
 
 export default function HomeMain({ userId }: ITransactionChartProps) {
   return (
-    <main id="main" className="py-4 min-h-[90vh]">
+    <main id="main" className="py-4">
       <section>
         <TransactionsChart userId={userId} />
         <ExpensesTable userId={userId} />
