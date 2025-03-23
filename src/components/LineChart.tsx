@@ -16,11 +16,11 @@ import formatDateToBR from "@/utils/formatDateToBR";
 import ExportButton from "./exportButton";
 import { ITransaction } from "@/interfaces/ITransaction";
 
-interface IFinancialEvolutionChartProps {
+interface ILineChartComponent {
   userId: number;
 }
 
-export default function FinancialEvolutionChart({ userId }: IFinancialEvolutionChartProps) {
+export default function LineChartComponent({ userId }: ILineChartComponent) {
   const [chartData, setChartData] = useState<{ date: string; saldo: number }[]>(
     []
   );
@@ -38,9 +38,7 @@ export default function FinancialEvolutionChart({ userId }: IFinancialEvolutionC
 
   return (
     <div className="max-w-[1520px]">
-      <h2 className="text-xl font-semibold mb-2">
-        Evolução Financeira
-      </h2>
+      <h2 className="text-xl font-semibold mb-2">Evolução Financeira</h2>
 
       <div className="flex justify-between">
         {/* Filtros */}

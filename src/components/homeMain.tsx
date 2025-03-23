@@ -1,8 +1,7 @@
-import { useState } from "react";
 import ExpensesTable from "./expensesTable";
-import FinancialEvolutionChart from "./FinancialEvolutionChart";
-import TransactionsChart from "./TransactionsChart";
-import PieChartTransactions from "./PieChartTransactions";
+import LineChartComponent from "./LineChart";
+import PieChartComponent from "./PieChart";
+import BarChartComponent from "./BarChart";
 
 interface ITransactionChartProps {
   userId: number;
@@ -12,12 +11,11 @@ export default function HomeMain({ userId }: ITransactionChartProps) {
   return (
     <main id="main" className="py-4">
       <section>
-        <PieChartTransactions userId={userId} />
-        <TransactionsChart userId={userId} />
+        <PieChartComponent userId={userId} />
+        <BarChartComponent userId={userId} />
         <ExpensesTable userId={userId} />
-
       </section>
-      <FinancialEvolutionChart  userId={userId} />
+      <LineChartComponent userId={userId} />
     </main>
   );
 }

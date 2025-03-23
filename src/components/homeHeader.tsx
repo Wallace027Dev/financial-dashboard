@@ -1,7 +1,7 @@
 export default function HomeHeader() {
   return (
     <>
-      <header className="flex start gap-4 h-12" id="header">
+      <header className="flex start gap-4" id="header">
         <button
           type="button"
           className="bg-categories-house hover:bg-hover hover:text-background font-medium px-5 rounded-md text-lg"

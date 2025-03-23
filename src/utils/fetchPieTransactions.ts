@@ -1,4 +1,4 @@
-import ITransaction from "@/interfaces/ITransaction";
+import { ITransaction } from "@/interfaces/ITransaction";
 import formatTransactions from "./formatTransactions";
 import getDateRange from "./getDateRange";
 import getFetch from "./getFetch";
@@ -13,11 +13,13 @@ export default async function fetchPieTransactions(
   try {
     const { minDateISO, maxDateISO } = getDateRange(selectedPeriod);
 
-    const transactions: ITransaction[] = await getFetch("transactions", {
+    const params = {
       userId,
       minDate: minDateISO,
       maxDate: maxDateISO
-    });
+    };
+
+    const transactions: ITransaction[] = await getFetch("transactions", params);
 
     const formattedTransactions = transactions.map((t) => ({
       ...t,

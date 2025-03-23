@@ -3,41 +3,41 @@ const transactions: any = [
     id: 982,
     type: "EXPENSE",
     value: 122,
-    category: "Restaurante",
+    category: "Lazer",
     userId: 202,
-    createdAt: "2025-02-18"
+    createdAt: "2025-03-18"
   },
   {
     id: 243,
     type: "EXPENSE",
     value: 180.98,
-    category: "Restaurante",
+    category: "Lazer",
     userId: 202,
-    createdAt: "2025-02-09"
+    createdAt: "2025-03-09"
   },
   {
     id: 811,
     type: "EXPENSE",
     value: 1232.32,
-    category: "Mercado",
+    category: "Casa",
     userId: 202,
-    createdAt: "2025-02-17"
+    createdAt: "2025-03-17"
   },
   {
     id: 11,
     type: "EXPENSE",
     value: 1232.32,
-    category: "Mercado",
+    category: "Casa",
     userId: 202,
-    createdAt: "2024-04-17"
+    createdAt: "2025-03-17"
   },
   {
     id: 818,
     type: "EXPENSE",
     value: 123,
-    category: "Lazer",
+    category: "Despesas fixas",
     userId: 202,
-    createdAt: "2025-02-17"
+    createdAt: "2025-03-17"
   },
   {
     id: 125,
@@ -45,15 +45,15 @@ const transactions: any = [
     value: 2500,
     category: "Salário mensal",
     userId: 202,
-    createdAt: "2025-02-16"
+    createdAt: "2025-03-16"
   },
   {
     id: 556,
-    type: "RECIPE",
+    type: "EXPENSE",
     value: 1200,
-    category: "Freelance",
+    category: "Educação",
     userId: 202,
-    createdAt: "2025-02-16",
+    createdAt: "2025-03-16",
     deletedAt: "2025-02-16"
   }
 ];

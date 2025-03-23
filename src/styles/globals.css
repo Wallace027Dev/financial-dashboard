@@ -13,7 +13,7 @@
     "aside header"
     "aside main";
   grid-template-columns: 300px 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 48px 1fr;
 }
 
 #aside {
@@ -26,5 +26,4 @@
 
 #main {
   grid-area: main;
-  min-height: 90vh;
 }

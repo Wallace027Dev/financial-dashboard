@@ -13,7 +13,7 @@ interface ITransactionChartProps {
   userId: number;
 }
 
-export default function PieChartTransactions({
+export default function PieChartComponent({
   userId
 }: ITransactionChartProps) {
   const [transactions, setTransactions] = useState<ITransaction[]>([]);

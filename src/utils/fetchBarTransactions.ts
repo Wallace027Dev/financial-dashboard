@@ -1,6 +1,4 @@
 import { ITransaction } from "@/interfaces/ITransaction";
-import formatDateToBR from "./formatDateToBR";
-import groupTransactions from "./groupTransactions";
 import getDateRange from "./getDateRange";
 import getFetch from "./getFetch";
 import fetchBarParams from "./fetchBarParams";
@@ -15,35 +13,43 @@ export default async function fetchBarTransactions(
   setAllCategories: (categories: string[]) => void,
   allCategories: string[]
 ) {
-  const { minDateISO, maxDateISO } = getDateRange(selectedPeriod);
-
-  const params = fetchBarParams(
-    userId,
-    minDateISO,
-    maxDateISO,
-    selectedCategory,
-    selectedType
-  );
-
   try {
+    const { minDateISO, maxDateISO } = getDateRange(selectedPeriod);
+
+    const params = fetchBarParams(
+      userId,
+      minDateISO,
+      maxDateISO,
+      selectedCategory,
+      selectedType
+    );
+
     const transactions: ITransaction[] = await getFetch("transactions", params);
 
-    if (allCategories.length === 0) {
-      const uniqueCategories = [
-        ...new Set(transactions.map((t: ITransaction) => t.category))
-      ];
-      setAllCategories(uniqueCategories);
-    }
+    const formattedData = transactions
+      .filter((t) => t.type === "EXPENSE") // Filtra apenas despesas
+      .reduce((acc, t) => {
+        const existingCategory = acc.find(
+          (item) => item.category === t.category
+        );
 
-    const formattedTransactions = transactions.map((t) => ({
-      ...t,
-      createdAtFormatted: formatDateToBR(t.createdAt),
-      deletedAtFormatted: t.deletedAt ? formatDateToBR(t.deletedAt) : null
-    }));
+        if (existingCategory) {
+          existingCategory.value += t.value;
+        } else {
+          acc.push({ category: t.category, value: t.value });
+        }
 
-    const groupedData = groupTransactions(formattedTransactions);
-    setChartData(groupedData);
-    setRawTransactions(transactions);
+        return acc;
+      }, []);
+
+    setChartData(formattedData); // Atualiza o estado do gráfico
+
+    const filteredTransactions = transactions.filter(
+      (t) => t.type === "EXPENSE"
+    );
+
+    setChartData(formattedData);
+    setRawTransactions(filteredTransactions);
   } catch (error) {
     console.error("Erro ao buscar transações:", error);
   }
