@@ -9,7 +9,7 @@ interface ITransactionChartProps {
 
 export default function HomeMain({ userId }: ITransactionChartProps) {
   return (
-    <main id="main" className="py-4">
+    <main id="main">
       <section>
         <PieChartComponent userId={userId} />
         <BarChartComponent userId={userId} />

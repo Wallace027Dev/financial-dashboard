@@ -1,16 +1,16 @@
 "use client";
 import HomeAside from "@/components/homeAside";
-import HomeHeader from "@/components/homeHeader";
+import TransactionsHeader from "@/components/TransactionsHeader";
 import HomeMain from "@/components/homeMain";
 import { useParams } from "next/navigation";
 
-export default function Home() {
+export default function DashboardPage() {
   const params = useParams();
   const userId = Number(params.id);
 
   return (
     <>
-      <HomeHeader />
+      <TransactionsHeader />
       <HomeAside />
       <HomeMain userId={userId} />
     </>
